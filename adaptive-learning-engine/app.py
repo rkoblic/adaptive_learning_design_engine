@@ -4,6 +4,14 @@ Adaptive Learning Design Engine - Main Flask Application
 A prototype that demonstrates AI-powered curriculum generation for experiential learning.
 """
 
+import os
+import sys
+
+# Ensure the app directory is in the path for imports
+app_dir = os.path.dirname(os.path.abspath(__file__))
+if app_dir not in sys.path:
+    sys.path.insert(0, app_dir)
+
 from flask import Flask, render_template, request, session, redirect, url_for, Response, flash
 import json
 
@@ -16,7 +24,10 @@ from prompts import (
     build_curriculum_prompt
 )
 
-app = Flask(__name__)
+# Initialize Flask with explicit template and static paths
+app = Flask(__name__,
+            template_folder=os.path.join(app_dir, 'templates'),
+            static_folder=os.path.join(app_dir, 'static'))
 app.config.from_object(Config)
 app.config['MAX_CONTENT_LENGTH'] = Config.MAX_CONTENT_LENGTH
 

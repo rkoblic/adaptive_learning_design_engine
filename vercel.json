@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "adaptive-learning-engine/app.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/adaptive-learning-engine/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/adaptive-learning-engine/app.py"
+    }
+  ],
+  "env": {
+    "PYTHONPATH": "adaptive-learning-engine"
+  }
+}
