@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}Generated Course | Adaptive Learning Design Engine{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Progress Indicator -->
+    <div class="mb-8">
+        <div class="flex items-center justify-center space-x-4">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <span class="ml-2 text-green-600">Input Details</span>
+            </div>
+            <div class="w-16 h-1 bg-green-500"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <span class="ml-2 text-green-600">Review & Confirm</span>
+            </div>
+            <div class="w-16 h-1 bg-green-500"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">3</div>
+                <span class="ml-2 font-medium text-primary">Generated Course</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Banner -->
+    <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+            <svg class="w-6 h-6 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <div>
+                <h3 class="font-medium text-green-800">Course Shell Generated Successfully</h3>
+                <p class="text-sm text-green-700">Your complete curriculum is ready. Download or review below.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex gap-6">
+        <!-- Table of Contents Sidebar -->
+        <div class="hidden lg:block w-64 flex-shrink-0">
+            <div class="sticky top-4">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <h3 class="font-semibold text-gray-900 mb-3">Contents</h3>
+                    <nav class="space-y-1 text-sm" id="toc">
+                        <a href="#course-header" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Course Header</a>
+                        <a href="#learning-objectives" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Learning Objectives</a>
+                        <a href="#weekly-schedule" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Weekly Schedule</a>
+                        <a href="#assessment-package" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Assessment Package</a>
+                        <a href="#grading-breakdown" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Grading Breakdown</a>
+                    </nav>
+
+                    <div class="border-t border-gray-200 mt-4 pt-4">
+                        <button onclick="toggleAllSections()" class="text-sm text-primary hover:underline">
+                            Expand/Collapse All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-4 space-y-2">
+                    <a href="{{ url_for('download_curriculum') }}" class="flex items-center justify-center w-full px-4 py-3 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download Markdown
+                    </a>
+                    <button onclick="copyToClipboard()" class="flex items-center justify-center w-full px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                        </svg>
+                        Copy to Clipboard
+                    </button>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="mt-4 space-y-2 text-sm">
+                    <a href="{{ url_for('back_to_confirm') }}" class="block text-gray-600 hover:text-primary">
+                        &larr; Edit Inputs
+                    </a>
+                    <a href="{{ url_for('intake_form') }}" class="block text-gray-600 hover:text-primary">
+                        Start New Course
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 min-w-0">
+            <!-- Mobile Actions -->
+            <div class="lg:hidden mb-4 flex gap-2">
+                <a href="{{ url_for('download_curriculum') }}" class="flex-1 flex items-center justify-center px-4 py-2 bg-primary text-white font-medium rounded-lg">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Download
+                </a>
+                <button onclick="copyToClipboard()" class="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                    </svg>
+                    Copy
+                </button>
+            </div>
+
+            <!-- Curriculum Content -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 curriculum-content">
+                <div class="prose prose-indigo max-w-none">
+                    {{ curriculum_html|safe }}
+                </div>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div class="lg:hidden mt-6 flex justify-between">
+                <a href="{{ url_for('back_to_confirm') }}" class="text-gray-600 hover:text-primary">
+                    &larr; Edit Inputs
+                </a>
+                <a href="{{ url_for('intake_form') }}" class="text-primary hover:underline">
+                    Start New Course
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden textarea for clipboard -->
+    <textarea id="markdown-content" class="hidden">{{ curriculum_markdown }}</textarea>
+</div>
+
+<!-- Back to Top Button -->
+<button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-primary text-white rounded-full shadow-lg opacity-0 transition-opacity hover:bg-indigo-700" onclick="scrollToTop()">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+    </svg>
+</button>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 px-6 py-3 bg-gray-900 text-white rounded-lg shadow-lg opacity-0 transition-opacity">
+    Copied to clipboard!
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Copy to clipboard
+    function copyToClipboard() {
+        const content = document.getElementById('markdown-content').value;
+        navigator.clipboard.writeText(content).then(() => {
+            showToast('Copied to clipboard!');
+        }).catch(() => {
+            // Fallback for older browsers
+            const textarea = document.getElementById('markdown-content');
+            textarea.classList.remove('hidden');
+            textarea.select();
+            document.execCommand('copy');
+            textarea.classList.add('hidden');
+            showToast('Copied to clipboard!');
+        });
+    }
+
+    // Show toast notification
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+            toast.classList.remove('opacity-100');
+            toast.classList.add('opacity-0');
+        }, 2000);
+    }
+
+    // Toggle all collapsible sections
+    let allExpanded = true;
+    function toggleAllSections() {
+        const sections = document.querySelectorAll('.curriculum-content details');
+        allExpanded = !allExpanded;
+        sections.forEach(section => {
+            section.open = allExpanded;
+        });
+    }
+
+    // Back to top button
+    const backToTopBtn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.remove('opacity-0');
+            backToTopBtn.classList.add('opacity-100');
+        } else {
+            backToTopBtn.classList.remove('opacity-100');
+            backToTopBtn.classList.add('opacity-0');
+        }
+    });
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Highlight active TOC item on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                document.querySelectorAll('#toc a').forEach(link => {
+                    link.classList.remove('bg-indigo-50', 'text-primary', 'font-medium');
+                    if (link.getAttribute('href') === '#' + id) {
+                        link.classList.add('bg-indigo-50', 'text-primary', 'font-medium');
+                    }
+                });
+            }
+        });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    // Observe headings for TOC highlighting
+    document.querySelectorAll('.curriculum-content h1, .curriculum-content h2').forEach(heading => {
+        // Create IDs from heading text if not present
+        if (!heading.id) {
+            heading.id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
+        observer.observe(heading);
+    });
+</script>
+
+<style>
+    /* Prose styling for curriculum content */
+    .prose h1 {
+        @apply text-3xl font-bold text-gray-900 border-b border-gray-200 pb-4 mb-6;
+    }
+    .prose h2 {
+        @apply text-2xl font-bold text-gray-800 mt-8 mb-4;
+    }
+    .prose h3 {
+        @apply text-xl font-semibold text-gray-700 mt-6 mb-3;
+    }
+    .prose h4 {
+        @apply text-lg font-medium text-gray-700 mt-4 mb-2;
+    }
+    .prose p {
+        @apply text-gray-600 leading-relaxed mb-4;
+    }
+    .prose ul, .prose ol {
+        @apply my-4 pl-6;
+    }
+    .prose li {
+        @apply text-gray-600 mb-2;
+    }
+    .prose table {
+        @apply w-full border-collapse border border-gray-300 my-6;
+    }
+    .prose th {
+        @apply bg-gray-100 border border-gray-300 px-4 py-2 text-left font-semibold text-gray-700;
+    }
+    .prose td {
+        @apply border border-gray-300 px-4 py-2 text-gray-600;
+    }
+    .prose code {
+        @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+    }
+    .prose pre {
+        @apply bg-gray-100 p-4 rounded-lg overflow-x-auto my-4;
+    }
+    .prose blockquote {
+        @apply border-l-4 border-indigo-500 pl-4 my-4 italic text-gray-600;
+    }
+    .prose hr {
+        @apply my-8 border-gray-200;
+    }
+
+    /* Print styles */
+    @media print {
+        .sticky, #back-to-top, #toast {
+            display: none !important;
+        }
+        .curriculum-content {
+            box-shadow: none !important;
+            border: none !important;
+        }
+    }
+</style>
+{% endblock %}

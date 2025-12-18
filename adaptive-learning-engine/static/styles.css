@@ -1,0 +1,234 @@
+/* Custom styles for Adaptive Learning Design Engine */
+/* Supplements Tailwind CSS */
+
+/* Section toggle animation */
+.section-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.section-content.hidden {
+    display: none;
+}
+
+.section-arrow {
+    transition: transform 0.3s ease;
+}
+
+.section-arrow.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* File drop zone */
+#drop-zone {
+    transition: all 0.2s ease;
+}
+
+#drop-zone:hover {
+    border-color: #4F46E5;
+    background-color: #EEF2FF;
+}
+
+/* Skill tags */
+.skill-tag {
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form inputs focus state */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Button hover effects */
+button:not(:disabled):hover {
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Card hover effects */
+.bg-white.rounded-lg {
+    transition: box-shadow 0.2s ease;
+}
+
+/* Progress indicator */
+.progress-step {
+    transition: all 0.3s ease;
+}
+
+/* Toast animation */
+#toast {
+    transition: opacity 0.3s ease;
+}
+
+/* Back to top button */
+#back-to-top {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#back-to-top:hover {
+    transform: translateY(-2px);
+}
+
+/* Prose content improvements */
+.prose {
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.prose h1:first-child {
+    margin-top: 0;
+}
+
+.prose table {
+    font-size: 14px;
+}
+
+.prose table th,
+.prose table td {
+    vertical-align: top;
+}
+
+/* Curriculum content sections */
+.curriculum-content h2 {
+    scroll-margin-top: 2rem;
+}
+
+/* Deliverable item drag handle */
+.deliverable-item .cursor-move {
+    cursor: grab;
+}
+
+.deliverable-item .cursor-move:active {
+    cursor: grabbing;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .prose {
+        font-size: 15px;
+    }
+
+    .prose table {
+        font-size: 13px;
+    }
+
+    .prose th,
+    .prose td {
+        padding: 8px;
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white;
+    }
+
+    header,
+    footer,
+    .sticky,
+    #back-to-top,
+    #toast,
+    button,
+    a[href]:not(.prose a) {
+        display: none !important;
+    }
+
+    .curriculum-content {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    .prose {
+        max-width: 100%;
+    }
+
+    .prose h1 {
+        font-size: 24px;
+    }
+
+    .prose h2 {
+        font-size: 20px;
+        page-break-after: avoid;
+    }
+
+    .prose h3 {
+        font-size: 18px;
+        page-break-after: avoid;
+    }
+
+    .prose table {
+        page-break-inside: avoid;
+    }
+
+    .prose ul,
+    .prose ol {
+        page-break-inside: avoid;
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #4F46E5;
+    outline-offset: 2px;
+}
+
+/* Custom scrollbar for curriculum content */
+.curriculum-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.curriculum-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.curriculum-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.curriculum-content::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}

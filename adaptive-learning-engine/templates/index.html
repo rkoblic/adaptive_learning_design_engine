@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}Step 1: Input Details | Adaptive Learning Design Engine{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Progress Indicator -->
+    <div class="mb-8">
+        <div class="flex items-center justify-center space-x-4">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">1</div>
+                <span class="ml-2 font-medium text-primary">Input Details</span>
+            </div>
+            <div class="w-16 h-1 bg-gray-200"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold">2</div>
+                <span class="ml-2 text-gray-500">Review & Confirm</span>
+            </div>
+            <div class="w-16 h-1 bg-gray-200"></div>
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold">3</div>
+                <span class="ml-2 text-gray-500">Generated Course</span>
+            </div>
+        </div>
+    </div>
+
+    <form action="{{ url_for('extract_and_confirm') }}" method="POST" enctype="multipart/form-data" id="intakeForm">
+        <!-- Learner Profile Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <button type="button" class="w-full px-6 py-4 flex items-center justify-between text-left section-toggle" data-target="learner-section">
+                <div class="flex items-center">
+                    <div class="bg-blue-100 rounded-lg p-2 mr-3">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900">Learner Profile</h2>
+                        <p class="text-sm text-gray-500">Student information and resume</p>
+                    </div>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="px-6 pb-6 section-content" id="learner-section">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Student Name</label>
+                        <input type="text" name="learner_name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g., Jordan Smith">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Academic Level <span class="text-red-500">*</span></label>
+                        <select name="academic_level" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="">Select level...</option>
+                            <option value="Freshman">Freshman</option>
+                            <option value="Sophomore">Sophomore</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Senior">Senior</option>
+                            <option value="Graduate">Graduate</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Major/Program <span class="text-red-500">*</span></label>
+                        <input type="text" name="major_or_program" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g., Marketing, Computer Science">
+                    </div>
+                </div>
+
+                <!-- Resume Upload -->
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Resume <span class="text-red-500">*</span></label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors" id="drop-zone">
+                        <input type="file" name="resume_file" id="resume_file" accept=".pdf,.docx" class="hidden">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <p class="mt-2 text-sm text-gray-600">
+                            <button type="button" class="text-primary font-medium hover:underline" onclick="document.getElementById('resume_file').click()">Upload a file</button>
+                            or drag and drop
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">PDF or DOCX up to 10MB</p>
+                        <p class="text-sm text-gray-600 mt-2" id="file-name"></p>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-500">— OR —</div>
+                    <div class="mt-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Paste Resume Text</label>
+                        <textarea name="resume_text" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Paste your resume content here if you don't have a file..."></textarea>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6 mt-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Career Goals</label>
+                        <textarea name="career_goals" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="What career path interests you? What type of roles are you hoping to pursue?"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Skills You Want to Develop</label>
+                        <textarea name="skills_to_develop" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Any specific skills you're hoping to build through this experience?"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Learning Preferences</label>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="learning_preferences" value="Visual" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="ml-2 text-sm text-gray-700">Visual</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="learning_preferences" value="Reading/Writing" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="ml-2 text-sm text-gray-700">Reading/Writing</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="learning_preferences" value="Hands-on" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="ml-2 text-sm text-gray-700">Hands-on</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="learning_preferences" value="Collaborative" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="ml-2 text-sm text-gray-700">Collaborative</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="learning_preferences" value="Independent" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                <span class="ml-2 text-sm text-gray-700">Independent</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project & Employer Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <button type="button" class="w-full px-6 py-4 flex items-center justify-between text-left section-toggle" data-target="project-section">
+                <div class="flex items-center">
+                    <div class="bg-green-100 rounded-lg p-2 mr-3">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900">Project & Employer</h2>
+                        <p class="text-sm text-gray-500">Project details and company information</p>
+                    </div>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="px-6 pb-6 section-content" id="project-section">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Company Name <span class="text-red-500">*</span></label>
+                        <input type="text" name="company_name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g., GreenTech Solutions">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Industry <span class="text-red-500">*</span></label>
+                        <select name="industry" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="">Select industry...</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Education">Education</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Retail">Retail</option>
+                            <option value="Marketing/Advertising">Marketing/Advertising</option>
+                            <option value="Nonprofit">Nonprofit</option>
+                            <option value="Government">Government</option>
+                            <option value="Energy/Sustainability">Energy/Sustainability</option>
+                            <option value="Consulting">Consulting</option>
+                            <option value="Media/Entertainment">Media/Entertainment</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Project Title <span class="text-red-500">*</span></label>
+                        <input type="text" name="project_title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g., Digital Marketing Campaign Development">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Project Description <span class="text-red-500">*</span></label>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-3">
+                        <p class="text-sm text-blue-800">
+                            <strong>Describe the project in your own words. Include:</strong>
+                        </p>
+                        <ul class="text-sm text-blue-700 mt-2 space-y-1 list-disc list-inside">
+                            <li>What problem or opportunity will the student address?</li>
+                            <li>What will the student actually do day-to-day?</li>
+                            <li>What will they produce or deliver by the end?</li>
+                            <li>What does success look like?</li>
+                            <li>What skills or background would be helpful?</li>
+                        </ul>
+                        <p class="text-sm text-blue-700 mt-2 italic">Write 2-4 paragraphs. The more context you provide, the better we can design the learning experience.</p>
+                    </div>
+                    <textarea name="project_narrative" rows="8" required minlength="100" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Describe the project here..."></textarea>
+                    <p class="text-xs text-gray-500 mt-1">Minimum 100 characters</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mentorship Level <span class="text-red-500">*</span></label>
+                        <select name="mentorship_level" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="">Select level...</option>
+                            <option value="High">High (weekly meetings)</option>
+                            <option value="Medium">Medium (bi-weekly)</option>
+                            <option value="Low">Low (as-needed)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Team Size <span class="text-red-500">*</span></label>
+                        <select name="team_size" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="">Select size...</option>
+                            <option value="Individual">Individual</option>
+                            <option value="Pair">Pair (2)</option>
+                            <option value="Small Team">Small Team (3-4)</option>
+                            <option value="Large Team">Large Team (5+)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Institutional Constraints Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <button type="button" class="w-full px-6 py-4 flex items-center justify-between text-left section-toggle" data-target="institution-section">
+                <div class="flex items-center">
+                    <div class="bg-purple-100 rounded-lg p-2 mr-3">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900">Institutional Constraints</h2>
+                        <p class="text-sm text-gray-500">Course structure and grading requirements</p>
+                    </div>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="px-6 pb-6 section-content" id="institution-section">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Credit Hours <span class="text-red-500">*</span></label>
+                        <input type="number" name="credit_hours" min="1" max="6" value="3" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Term Length (weeks) <span class="text-red-500">*</span></label>
+                        <input type="number" name="term_length_weeks" min="4" max="20" value="14" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Hours Per Week <span class="text-red-500">*</span></label>
+                        <input type="number" name="hours_per_week" min="1" max="40" value="9" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Institution Name</label>
+                        <input type="text" name="institution_name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="e.g., State University">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Grading Scale <span class="text-red-500">*</span></label>
+                        <select name="grading_scale" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="Letter Grade (A-F)">Letter Grade (A-F)</option>
+                            <option value="Pass/Fail">Pass/Fail</option>
+                            <option value="Competency-Based">Competency-Based</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Competency Framework</label>
+                    <div class="flex flex-wrap gap-3">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="competency_framework" value="NACE Career Readiness" class="rounded border-gray-300 text-primary focus:ring-primary">
+                            <span class="ml-2 text-sm text-gray-700">NACE Career Readiness</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="competency_framework" value="AAC&U VALUE" class="rounded border-gray-300 text-primary focus:ring-primary">
+                            <span class="ml-2 text-sm text-gray-700">AAC&U VALUE</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="competency_framework" value="Institution-Specific" class="rounded border-gray-300 text-primary focus:ring-primary">
+                            <span class="ml-2 text-sm text-gray-700">Institution-Specific</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+            <button type="submit" id="submitBtn" class="px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+                <span id="submitText">Analyze & Continue</span>
+                <span id="loadingText" class="hidden">
+                    <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Analyzing... (15-30 seconds)
+                </span>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Section toggle functionality
+    document.querySelectorAll('.section-toggle').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            const content = document.getElementById(targetId);
+            const arrow = button.querySelector('.section-arrow');
+
+            content.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        });
+    });
+
+    // File upload handling
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('resume_file');
+    const fileNameDisplay = document.getElementById('file-name');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.add('border-primary', 'bg-indigo-50');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.remove('border-primary', 'bg-indigo-50');
+        }, false);
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            fileInput.files = files;
+            updateFileName(files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            updateFileName(e.target.files[0]);
+        }
+    });
+
+    function updateFileName(file) {
+        fileNameDisplay.textContent = `Selected: ${file.name}`;
+        fileNameDisplay.classList.add('text-green-600', 'font-medium');
+    }
+
+    // Form submission with loading state
+    document.getElementById('intakeForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const loadingText = document.getElementById('loadingText');
+
+        btn.disabled = true;
+        submitText.classList.add('hidden');
+        loadingText.classList.remove('hidden');
+    });
+</script>
+{% endblock %}
