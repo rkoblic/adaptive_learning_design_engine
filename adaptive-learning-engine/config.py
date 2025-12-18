@@ -14,7 +14,7 @@ class Config:
 
     # Anthropic API settings
     ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
-    CLAUDE_MODEL = os.getenv('CLAUDE_MODEL', 'claude-sonnet-4-20250514')
+    CLAUDE_MODEL = os.getenv('CLAUDE_MODEL', 'claude-sonnet-4-5-20241022')
 
     # API call settings
     MAX_RETRIES = 3
