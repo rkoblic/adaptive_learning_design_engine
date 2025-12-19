@@ -44,6 +44,34 @@ def get_claude_client():
     return claude_client
 
 
+def merge_user_project_inputs(ai_extraction: dict, user_inputs: dict) -> dict:
+    """
+    Merge user-provided optional fields with AI extraction results.
+    User input takes priority when provided.
+    """
+    result = ai_extraction.copy() if ai_extraction else {}
+
+    # Merge deliverables - user input takes priority if provided
+    user_deliverables = user_inputs.get('expected_deliverables', '').strip()
+    if user_deliverables:
+        user_list = [d.strip() for d in user_deliverables.split(',') if d.strip()]
+        # Convert to expected format
+        result['deliverables'] = [{'deliverable': d, 'description': '', 'type': 'other'} for d in user_list]
+
+    # Merge required skills - user input takes priority if provided
+    user_skills = user_inputs.get('required_skills', '').strip()
+    if user_skills:
+        user_list = [s.strip() for s in user_skills.split(',') if s.strip()]
+        result['technical_skills_required'] = [{'skill': s, 'importance': 'required', 'context': ''} for s in user_list]
+
+    # Merge success criteria - user input takes priority if provided
+    user_criteria = user_inputs.get('success_criteria_input', '').strip()
+    if user_criteria:
+        result['success_criteria'] = [c.strip() for c in user_criteria.split(',') if c.strip()]
+
+    return result
+
+
 @app.route('/', methods=['GET'])
 def intake_form():
     """Step 1: Display raw intake form."""
@@ -85,7 +113,11 @@ def extract_and_confirm():
                 'project_title': request.form.get('project_title', ''),
                 'project_narrative': request.form.get('project_narrative', ''),
                 'mentorship_level': request.form.get('mentorship_level', ''),
-                'team_size': request.form.get('team_size', '')
+                'team_size': request.form.get('team_size', ''),
+                # Optional advanced fields
+                'expected_deliverables': request.form.get('expected_deliverables', ''),
+                'required_skills': request.form.get('required_skills', ''),
+                'success_criteria_input': request.form.get('success_criteria_input', '')
             },
             'institution': {
                 'credit_hours': request.form.get('credit_hours', '3'),
@@ -119,6 +151,10 @@ def extract_and_confirm():
 
         learner_extraction = client.extract_from_resume(raw_inputs['learner'])
         project_extraction = client.extract_from_narrative(raw_inputs['project'])
+
+        # Merge user-provided optional fields with AI extraction
+        project_extraction = merge_user_project_inputs(project_extraction, raw_inputs['project'])
+
         gap_analysis = client.analyze_gaps(learner_extraction, project_extraction)
 
         # Store in session

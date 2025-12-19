@@ -39,7 +39,12 @@ Analyze the match between learner and project and return as JSON:
     {{"learner_skill": "skill", "project_need": "requirement", "gap_description": "what's missing"}}
   ],
   "skill_gaps": [
-    {{"project_need": "requirement", "importance": "critical|important|nice_to_have", "learning_opportunity": "how this becomes a learning objective"}}
+    {{
+      "project_need": "requirement name",
+      "importance": "critical|important|nice_to_have",
+      "learning_objective": "Properly formatted learning objective using Bloom's verb",
+      "bloom_level": "Remember|Understand|Apply|Analyze|Evaluate|Create"
+    }}
   ],
   "fit_assessment": {{
     "overall_fit": "excellent|good|stretch|challenging",
@@ -49,6 +54,26 @@ Analyze the match between learner and project and return as JSON:
   }}
 }}
 ```
+
+## BLOOM'S TAXONOMY FOR LEARNING OBJECTIVES
+For each skill gap, write a measurable learning objective using Bloom's Taxonomy action verbs:
+
+- **Remember**: define, list, identify, recall, name, recognize
+- **Understand**: explain, summarize, interpret, describe, classify, compare
+- **Apply**: implement, execute, use, demonstrate, solve, apply
+- **Analyze**: compare, examine, differentiate, organize, deconstruct, investigate
+- **Evaluate**: assess, critique, justify, recommend, judge, defend
+- **Create**: design, develop, construct, produce, formulate, compose
+
+**Learning Objective Format**: "[Action verb] + [specific skill/content] + [context/condition for the project]"
+
+**Examples**:
+- "Analyze website traffic data using Google Analytics to identify customer acquisition patterns"
+- "Design customer persona documents based on market research and user interviews"
+- "Implement RESTful API endpoints using Python Flask for data retrieval"
+- "Evaluate campaign performance metrics to recommend optimization strategies"
+
+Choose the Bloom's level that matches the depth required by the project (Apply/Analyze for hands-on work, Create for design tasks, Evaluate for assessment tasks).
 
 Guidelines:
 - A "strong_match" means the learner has demonstrated this skill and it directly applies

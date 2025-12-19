@@ -256,6 +256,33 @@
 
                     <textarea name="project_narrative" id="project_narrative" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Describe the project here, or upload a document above..."></textarea>
                     <p class="text-xs text-gray-500 mt-1">Upload a file OR enter text (minimum 100 characters if typing)</p>
+
+                    <!-- Advanced Details (optional) -->
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <button type="button" onclick="toggleAdvancedProject()" class="text-sm text-gray-500 hover:text-gray-700 flex items-center">
+                            <svg id="advanced-arrow" class="w-4 h-4 mr-1 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                            Advanced Details (optional)
+                        </button>
+                        <div id="advanced-project" class="hidden mt-3 space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Expected Deliverables</label>
+                                <textarea name="expected_deliverables" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="e.g., Marketing plan document, Analytics dashboard, Final presentation"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">Comma-separated list. Leave blank to let AI infer from description.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Required Skills</label>
+                                <textarea name="required_skills" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="e.g., Google Analytics, Excel, Social media marketing"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">Comma-separated list. Leave blank to let AI infer from description.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Success Criteria</label>
+                                <textarea name="success_criteria_input" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="e.g., Complete campaign launch, Achieve 10% increase in leads"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">Comma-separated list. Leave blank to let AI infer from description.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -847,6 +874,14 @@ You'll work directly with our Chief Investment Officer and collaborate with our 
 
         content.classList.toggle('hidden');
         arrow.classList.toggle('rotate-180');
+    }
+
+    // Advanced project details toggle
+    function toggleAdvancedProject() {
+        const content = document.getElementById('advanced-project');
+        const arrow = document.getElementById('advanced-arrow');
+        content.classList.toggle('hidden');
+        arrow.classList.toggle('rotate-90');
     }
 
     // File upload handling
