@@ -9,12 +9,14 @@ An AI-powered curriculum generation prototype that transforms workplace projects
 - **Project Analysis**: Parses project narratives to identify deliverables and requirements
 - **Skill Gap Analysis**: Compares learner capabilities to project needs
 - **Curriculum Generation**: Creates complete course shells with:
-  - Learning objectives (Bloom's Taxonomy)
+  - Learning objectives (Bloom's Taxonomy) - Fixed and Variable
   - Weekly schedule (Kolb's Experiential Learning Cycle)
   - Reflection prompts (DEAL Model)
+  - Grading breakdown
   - Assessment rubrics
   - Employer evaluation forms
   - Student self-assessments
+- **Modern UI**: Card-based preview interface with modal details view for easy navigation
 
 ## Learning Science Frameworks
 
@@ -24,6 +26,7 @@ The system embeds established learning science principles:
 - **DEAL Reflection Model**: Describe, Examine, Articulate Learning
 - **Bloom's Taxonomy**: Learning objectives use appropriate action verbs with cognitive levels
 - **Zone of Proximal Development**: Scaffolding adjusts based on learner-project fit
+- **Configurable Fixed Objectives**: Institutions can select which transferable skills to include
 
 ## Quick Start
 
@@ -85,10 +88,13 @@ The system embeds established learning science principles:
 
 ### Step 3: Generated Course
 
-1. View the complete curriculum document
-2. Download as Markdown
-3. Copy to clipboard
-4. Start over or edit inputs
+1. View the course title header with prominent project name
+2. Browse section cards (Course Overview, Learning Objectives, Grading, Weekly Schedule, etc.)
+3. Click any card to open a detailed modal view with full content
+4. Navigate between sections using arrow keys or navigation buttons
+5. Download the complete curriculum as Markdown
+6. Copy to clipboard
+7. Edit inputs or start a new course
 
 ## Project Structure
 
@@ -99,12 +105,12 @@ adaptive-learning-engine/
 ├── requirements.txt         # Python dependencies
 ├── .env.example             # Environment variables template
 ├── templates/
-│   ├── base.html            # Base template
+│   ├── base.html            # Base template with shared layout
 │   ├── index.html           # Step 1: Input form
-│   ├── confirm.html         # Step 2: Confirmation
-│   └── result.html          # Step 3: Output display
+│   ├── confirm.html         # Step 2: Review & Confirmation
+│   └── result.html          # Step 3: Generated Course (card UI with modals)
 ├── static/
-│   └── styles.css           # Custom styles
+│   └── styles.css           # Custom Tailwind styles
 ├── prompts/
 │   ├── __init__.py
 │   ├── extraction.py        # Resume/project extraction prompts
@@ -114,7 +120,7 @@ adaptive-learning-engine/
     ├── __init__.py
     ├── file_parser.py       # PDF/DOCX text extraction
     ├── api_client.py        # Claude API wrapper
-    └── output_formatter.py  # Output formatting utilities
+    └── output_formatter.py  # Markdown to HTML conversion
 ```
 
 ## Configuration
@@ -123,7 +129,7 @@ adaptive-learning-engine/
 |----------|-------------|---------|
 | `ANTHROPIC_API_KEY` | Your Anthropic API key | Required |
 | `FLASK_SECRET_KEY` | Flask session secret | `dev-secret-key` |
-| `CLAUDE_MODEL` | Claude model to use | `claude-sonnet-4-20250514` |
+| `CLAUDE_MODEL` | Claude model to use | `claude-sonnet-4-5-20250929` |
 
 ## API Usage
 
