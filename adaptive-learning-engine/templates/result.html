@@ -50,20 +50,21 @@
         <div class="hidden lg:block w-64 flex-shrink-0">
             <div class="sticky top-4">
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                    <h3 class="font-semibold text-gray-900 mb-3">Contents</h3>
+                    <h3 class="font-semibold text-gray-900 mb-3">Jump to Section</h3>
                     <nav class="space-y-1 text-sm" id="toc">
-                        <a href="#course-header" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Course Header</a>
-                        <a href="#learning-objectives" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Learning Objectives</a>
-                        <a href="#weekly-schedule" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Weekly Schedule</a>
-                        <a href="#assessment-package" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Assessment Package</a>
-                        <a href="#grading-breakdown" class="block py-1 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded">Grading Breakdown</a>
+                        <a href="#learning-objectives" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
+                            <span class="mr-2">🎯</span> Learning Objectives
+                        </a>
+                        <a href="#weekly-schedule" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
+                            <span class="mr-2">📅</span> Weekly Schedule
+                        </a>
+                        <a href="#assessment-package" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
+                            <span class="mr-2">📋</span> Assessment Package
+                        </a>
+                        <a href="#grading-breakdown" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
+                            <span class="mr-2">📊</span> Grading Breakdown
+                        </a>
                     </nav>
-
-                    <div class="border-t border-gray-200 mt-4 pt-4">
-                        <button onclick="toggleAllSections()" class="text-sm text-primary hover:underline">
-                            Expand/Collapse All
-                        </button>
-                    </div>
                 </div>
 
                 <!-- Action Buttons -->
@@ -112,11 +113,31 @@
                 </button>
             </div>
 
-            <!-- Curriculum Content -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 curriculum-content">
-                <div class="prose prose-indigo max-w-none">
+            <!-- Quick Actions Bar (Mobile + Desktop) -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleAllSections()" id="toggleAllBtn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                        </svg>
+                        <span id="toggleAllText">Expand All</span>
+                    </button>
+                    <span class="text-sm text-gray-500 hidden sm:inline" id="sectionCount">6 sections</span>
+                </div>
+                <a href="{{ url_for('download_curriculum') }}" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-indigo-700 transition-colors flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Download
+                </a>
+            </div>
+
+            <!-- Curriculum Content (will be transformed into collapsible sections) -->
+            <div class="curriculum-content" id="curriculum-container">
+                <div class="prose prose-indigo max-w-none hidden" id="original-content">
                     {{ curriculum_html|safe }}
                 </div>
+                <div id="collapsible-sections"></div>
             </div>
 
             <!-- Mobile Navigation -->
@@ -150,13 +171,178 @@
 
 {% block scripts %}
 <script>
+    // Section configuration with colors and icons
+    const sectionConfig = {
+        'course': { color: 'blue', icon: '📚', title: 'Course Header' },
+        'learning': { color: 'green', icon: '🎯', title: 'Learning Objectives' },
+        'weekly': { color: 'purple', icon: '📅', title: 'Weekly Schedule' },
+        'reflection': { color: 'amber', icon: '💭', title: 'Reflection Prompts' },
+        'assessment': { color: 'teal', icon: '📋', title: 'Assessment Package' },
+        'grading': { color: 'indigo', icon: '📊', title: 'Grading Breakdown' }
+    };
+
+    // Color classes for each section type
+    const colorClasses = {
+        'blue': { header: 'bg-blue-50 border-blue-200', title: 'text-blue-800', icon: 'bg-blue-100' },
+        'green': { header: 'bg-green-50 border-green-200', title: 'text-green-800', icon: 'bg-green-100' },
+        'purple': { header: 'bg-purple-50 border-purple-200', title: 'text-purple-800', icon: 'bg-purple-100' },
+        'amber': { header: 'bg-amber-50 border-amber-200', title: 'text-amber-800', icon: 'bg-amber-100' },
+        'teal': { header: 'bg-teal-50 border-teal-200', title: 'text-teal-800', icon: 'bg-teal-100' },
+        'indigo': { header: 'bg-indigo-50 border-indigo-200', title: 'text-indigo-800', icon: 'bg-indigo-100' }
+    };
+
+    // Determine section type from title
+    function getSectionType(title) {
+        const lowerTitle = title.toLowerCase();
+        if (lowerTitle.includes('course') || lowerTitle.includes('header') || lowerTitle.includes('credit')) return 'course';
+        if (lowerTitle.includes('learning') || lowerTitle.includes('objective')) return 'learning';
+        if (lowerTitle.includes('weekly') || lowerTitle.includes('schedule') || lowerTitle.includes('week')) return 'weekly';
+        if (lowerTitle.includes('reflection')) return 'reflection';
+        if (lowerTitle.includes('assessment') || lowerTitle.includes('rubric') || lowerTitle.includes('evaluation')) return 'assessment';
+        if (lowerTitle.includes('grading') || lowerTitle.includes('breakdown')) return 'grading';
+        return 'blue'; // default
+    }
+
+    // Transform content into collapsible sections
+    document.addEventListener('DOMContentLoaded', function() {
+        const originalContent = document.getElementById('original-content');
+        const sectionsContainer = document.getElementById('collapsible-sections');
+
+        // Parse content and group by H2 sections
+        const sections = [];
+        let currentSection = null;
+        let preContent = []; // Content before first H2
+
+        Array.from(originalContent.children).forEach(node => {
+            if (node.tagName === 'H2') {
+                if (currentSection) {
+                    sections.push(currentSection);
+                }
+                currentSection = {
+                    title: node.textContent.trim(),
+                    elements: [],
+                    id: node.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+                };
+            } else if (currentSection) {
+                currentSection.elements.push(node.cloneNode(true));
+            } else {
+                preContent.push(node.cloneNode(true));
+            }
+        });
+        if (currentSection) {
+            sections.push(currentSection);
+        }
+
+        // Add pre-content (usually H1 title) as expanded intro
+        if (preContent.length > 0) {
+            const introCard = document.createElement('div');
+            introCard.className = 'bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4';
+            preContent.forEach(el => introCard.appendChild(el));
+            sectionsContainer.appendChild(introCard);
+        }
+
+        // Build collapsible cards for each section
+        sections.forEach((section, index) => {
+            const sectionType = getSectionType(section.title);
+            const config = sectionConfig[sectionType] || sectionConfig['course'];
+            const colors = colorClasses[config.color] || colorClasses['blue'];
+
+            const card = document.createElement('div');
+            card.className = 'section-card bg-white rounded-lg shadow-sm border border-gray-200 mb-4 overflow-hidden';
+            card.id = section.id;
+
+            // Header
+            const header = document.createElement('div');
+            header.className = `section-header px-6 py-4 cursor-pointer flex items-center justify-between ${colors.header} border-b`;
+            header.onclick = () => toggleSection(card);
+
+            header.innerHTML = `
+                <div class="flex items-center">
+                    <span class="text-2xl mr-3">${config.icon}</span>
+                    <h2 class="text-lg font-semibold ${colors.title}">${section.title}</h2>
+                </div>
+                <svg class="section-chevron w-5 h-5 ${colors.title} transform transition-transform ${index === 0 ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            `;
+
+            // Content
+            const content = document.createElement('div');
+            content.className = `section-content p-6 prose prose-indigo max-w-none ${index === 0 ? '' : 'hidden'}`;
+            section.elements.forEach(el => content.appendChild(el));
+
+            card.appendChild(header);
+            card.appendChild(content);
+            sectionsContainer.appendChild(card);
+        });
+
+        // Update section count
+        document.getElementById('sectionCount').textContent = `${sections.length} sections`;
+
+        // Update ToC links to work with collapsible sections
+        updateTocLinks();
+    });
+
+    // Toggle individual section
+    function toggleSection(card) {
+        const content = card.querySelector('.section-content');
+        const chevron = card.querySelector('.section-chevron');
+        content.classList.toggle('hidden');
+        chevron.classList.toggle('rotate-180');
+    }
+
+    // Toggle all sections
+    let allExpanded = false; // Start with most collapsed
+    function toggleAllSections() {
+        allExpanded = !allExpanded;
+        const cards = document.querySelectorAll('.section-card');
+        cards.forEach(card => {
+            const content = card.querySelector('.section-content');
+            const chevron = card.querySelector('.section-chevron');
+            if (allExpanded) {
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        });
+        document.getElementById('toggleAllText').textContent = allExpanded ? 'Collapse All' : 'Expand All';
+    }
+
+    // Update ToC links to expand sections when clicked
+    function updateTocLinks() {
+        document.querySelectorAll('#toc a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetCard = document.getElementById(targetId);
+                if (targetCard) {
+                    // Expand the section
+                    const content = targetCard.querySelector('.section-content');
+                    const chevron = targetCard.querySelector('.section-chevron');
+                    content.classList.remove('hidden');
+                    chevron.classList.add('rotate-180');
+
+                    // Scroll to it
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Highlight in ToC
+                    document.querySelectorAll('#toc a').forEach(l => {
+                        l.classList.remove('bg-indigo-50', 'text-primary', 'font-medium');
+                    });
+                    this.classList.add('bg-indigo-50', 'text-primary', 'font-medium');
+                }
+            });
+        });
+    }
+
     // Copy to clipboard
     function copyToClipboard() {
         const content = document.getElementById('markdown-content').value;
         navigator.clipboard.writeText(content).then(() => {
             showToast('Copied to clipboard!');
         }).catch(() => {
-            // Fallback for older browsers
             const textarea = document.getElementById('markdown-content');
             textarea.classList.remove('hidden');
             textarea.select();
@@ -178,16 +364,6 @@
         }, 2000);
     }
 
-    // Toggle all collapsible sections
-    let allExpanded = true;
-    function toggleAllSections() {
-        const sections = document.querySelectorAll('.curriculum-content details');
-        allExpanded = !allExpanded;
-        sections.forEach(section => {
-            section.open = allExpanded;
-        });
-    }
-
     // Back to top button
     const backToTopBtn = document.getElementById('back-to-top');
     window.addEventListener('scroll', () => {
@@ -203,30 +379,6 @@
     function scrollToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
-    // Highlight active TOC item on scroll
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.id;
-                document.querySelectorAll('#toc a').forEach(link => {
-                    link.classList.remove('bg-indigo-50', 'text-primary', 'font-medium');
-                    if (link.getAttribute('href') === '#' + id) {
-                        link.classList.add('bg-indigo-50', 'text-primary', 'font-medium');
-                    }
-                });
-            }
-        });
-    }, { rootMargin: '-20% 0px -70% 0px' });
-
-    // Observe headings for TOC highlighting
-    document.querySelectorAll('.curriculum-content h1, .curriculum-content h2').forEach(heading => {
-        // Create IDs from heading text if not present
-        if (!heading.id) {
-            heading.id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        }
-        observer.observe(heading);
-    });
 </script>
 
 <style>
@@ -274,10 +426,30 @@
         @apply my-8 border-gray-200;
     }
 
-    /* Print styles */
+    /* Section card hover effects */
+    .section-header:hover {
+        filter: brightness(0.97);
+    }
+
+    /* Smooth transitions */
+    .section-content {
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* Print styles - expand all sections */
     @media print {
-        .sticky, #back-to-top, #toast {
+        .sticky, #back-to-top, #toast, .section-header svg {
             display: none !important;
+        }
+        .section-content {
+            display: block !important;
+        }
+        .section-content.hidden {
+            display: block !important;
+        }
+        .section-card {
+            box-shadow: none !important;
+            page-break-inside: avoid;
         }
         .curriculum-content {
             box-shadow: none !important;
