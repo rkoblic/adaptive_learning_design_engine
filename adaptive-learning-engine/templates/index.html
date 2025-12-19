@@ -25,6 +25,16 @@
     </div>
 
     <form action="{{ url_for('extract_and_confirm') }}" method="POST" enctype="multipart/form-data" id="intakeForm">
+        <!-- Expand/Collapse All -->
+        <div class="flex justify-end mb-4">
+            <button type="button" id="expandAllBtn" onclick="toggleAllSections()" class="text-sm text-primary hover:underline flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                </svg>
+                <span id="expandAllText">Expand All Sections</span>
+            </button>
+        </div>
+
         <!-- Learner Profile Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
             <button type="button" class="w-full px-6 py-4 flex items-center justify-between text-left section-toggle" data-target="learner-section">
@@ -43,7 +53,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            <div class="px-6 pb-6 section-content" id="learner-section">
+            <div class="px-6 pb-6 section-content hidden" id="learner-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Student Name</label>
@@ -144,7 +154,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            <div class="px-6 pb-6 section-content" id="project-section">
+            <div class="px-6 pb-6 section-content hidden" id="project-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Company Name <span class="text-red-500">*</span></label>
@@ -252,7 +262,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            <div class="px-6 pb-6 section-content" id="institution-section">
+            <div class="px-6 pb-6 section-content hidden" id="institution-section">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Credit Hours <span class="text-red-500">*</span></label>
@@ -320,6 +330,35 @@
 
 {% block scripts %}
 <script>
+    // Track expand state
+    let allExpanded = false;
+
+    // Toggle all sections
+    function toggleAllSections() {
+        allExpanded = !allExpanded;
+        const sections = document.querySelectorAll('.section-content');
+        const arrows = document.querySelectorAll('.section-arrow');
+        const btnText = document.getElementById('expandAllText');
+
+        sections.forEach(section => {
+            if (allExpanded) {
+                section.classList.remove('hidden');
+            } else {
+                section.classList.add('hidden');
+            }
+        });
+
+        arrows.forEach(arrow => {
+            if (allExpanded) {
+                arrow.classList.add('rotate-180');
+            } else {
+                arrow.classList.remove('rotate-180');
+            }
+        });
+
+        btnText.textContent = allExpanded ? 'Collapse All Sections' : 'Expand All Sections';
+    }
+
     // Section toggle functionality
     document.querySelectorAll('.section-toggle').forEach(button => {
         button.addEventListener('click', () => {
