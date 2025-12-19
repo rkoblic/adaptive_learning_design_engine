@@ -76,8 +76,14 @@
     <!-- Course Title Header -->
     <div id="course-title-header" class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-8 mb-6 text-white">
         <p class="text-indigo-200 text-sm font-medium uppercase tracking-wide mb-2">Generated Course Shell</p>
-        <h1 id="course-title-display" class="text-3xl md:text-4xl font-bold mb-2">Course Title</h1>
-        <p id="course-credit-display" class="text-indigo-100 text-lg"></p>
+        <h1 id="course-title-display" class="text-3xl md:text-4xl font-bold mb-2">
+            {{ data.project.project_title if data and data.project and data.project.project_title else 'Course Shell' }}
+        </h1>
+        <p id="course-credit-display" class="text-indigo-100 text-lg">
+            {% if data and data.institution and data.institution.credit_hours %}
+                {{ data.institution.credit_hours }} Credit Hours
+            {% endif %}
+        </p>
     </div>
 
     <!-- Section Cards Grid -->
@@ -191,46 +197,6 @@
         return 'course'; // default
     }
 
-    // Extract and display course title from Course Header section
-    function extractAndDisplayCourseTitle() {
-        // Find the Course Overview/Header section
-        const courseHeaderSection = parsedSections.find(s => {
-            const type = getSectionType(s.title);
-            return type === 'course';
-        });
-
-        let courseTitle = 'Course Shell';
-        let creditHours = '';
-
-        if (courseHeaderSection) {
-            // Look for course title in the section content
-            courseHeaderSection.elements.forEach(el => {
-                const text = el.textContent || '';
-
-                // Look for "Course Title:" pattern
-                const titleMatch = text.match(/Course Title:\s*(.+?)(?:\n|$|Credit)/i);
-                if (titleMatch && titleMatch[1]) {
-                    courseTitle = titleMatch[1].trim();
-                }
-
-                // Look for "Credit Hours:" pattern
-                const creditMatch = text.match(/Credit Hours?:\s*(\d+)/i);
-                if (creditMatch && creditMatch[1]) {
-                    creditHours = creditMatch[1] + ' Credit Hours';
-                }
-            });
-        }
-
-        // Update the header display
-        document.getElementById('course-title-display').textContent = courseTitle;
-        const creditDisplay = document.getElementById('course-credit-display');
-        if (creditHours) {
-            creditDisplay.textContent = creditHours;
-        } else {
-            creditDisplay.classList.add('hidden');
-        }
-    }
-
     // Initialize the card grid layout
     document.addEventListener('DOMContentLoaded', function() {
         const originalContent = document.getElementById('original-content');
@@ -268,9 +234,6 @@
             const orderB = sectionConfig[typeB]?.order || 99;
             return orderA - orderB;
         });
-
-        // Extract course title from Course Header section
-        extractAndDisplayCourseTitle();
 
         // Build preview cards for each section
         parsedSections.forEach((section, index) => {
