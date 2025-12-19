@@ -250,22 +250,35 @@ def generate_curriculum():
         client = get_claude_client()
         curriculum_markdown = client.generate_curriculum(confirmed_data)
 
-        # Store for download
+        # Store for download and display
         session['curriculum'] = curriculum_markdown
+        session['curriculum_html'] = markdown_to_html(curriculum_markdown)
         session['confirmed_data'] = confirmed_data
 
-        # Convert to HTML for display
-        curriculum_html = markdown_to_html(curriculum_markdown)
-
-        return render_template('result.html',
-            curriculum_html=curriculum_html,
-            curriculum_markdown=curriculum_markdown,
-            data=confirmed_data
-        )
+        # Redirect to GET route (POST-Redirect-GET pattern)
+        return redirect(url_for('show_result'))
 
     except Exception as e:
         flash(f'Error generating curriculum: {str(e)}', 'error')
         return redirect(url_for('intake_form'))
+
+
+@app.route('/result', methods=['GET'])
+def show_result():
+    """Step 3: Display generated curriculum (GET route for refresh support)."""
+    curriculum_html = session.get('curriculum_html')
+    curriculum_markdown = session.get('curriculum')
+    confirmed_data = session.get('confirmed_data')
+
+    if not curriculum_html or not curriculum_markdown:
+        flash('No curriculum found. Please generate one first.', 'error')
+        return redirect(url_for('intake_form'))
+
+    return render_template('result.html',
+        curriculum_html=curriculum_html,
+        curriculum_markdown=curriculum_markdown,
+        data=confirmed_data
+    )
 
 
 @app.route('/download', methods=['GET'])
