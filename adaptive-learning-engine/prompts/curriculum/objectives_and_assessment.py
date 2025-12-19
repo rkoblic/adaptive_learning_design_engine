@@ -101,10 +101,11 @@ Include proficiency requirements for passing.
 **For Competency-Based:**
 Include proficiency levels for each objective.
 
-Also include:
-- 4-5 key rubric criteria for evaluating deliverables
-- 3-4 reflection quality criteria (based on DEAL model: Describe, Examine, Articulate Learning)
-- Employer evaluation dimensions
+**Final Deliverable:**
+Based on the project requirements, describe the final deliverable the student will produce. Include:
+- A clear title for the deliverable
+- A 2-3 sentence description of what it is
+- 3-5 key components or sections that make up the deliverable
 
 ## OUTPUT FORMAT
 
@@ -138,24 +139,17 @@ Return ONLY this JSON structure:
       "self_assessment": {{"weight": 10, "description": "Final synthesis and self-evaluation"}},
       "employer_evaluation": {{"weight": 5, "description": "Workplace mentor feedback"}}
     }},
-    "deliverable_rubric_criteria": [
-      {{
-        "criterion": "Technical Quality",
-        "description": "Accuracy, completeness, and technical soundness of work"
-      }}
-    ],
-    "reflection_rubric_criteria": [
-      {{
-        "criterion": "Description",
-        "description": "Accurate and detailed account of experiences"
-      }}
-    ],
-    "employer_evaluation_dimensions": [
-      {{
-        "dimension": "Work Quality",
-        "description": "Quality and thoroughness of deliverables produced"
-      }}
-    ]
+    "final_deliverable": {{
+      "title": "Marketing Campaign Strategy & Implementation Report",
+      "description": "A comprehensive document presenting the complete marketing campaign developed for the client, including research findings, strategy rationale, and implementation results.",
+      "components": [
+        "Executive Summary",
+        "Market Research & Customer Personas",
+        "Campaign Strategy & Content Calendar",
+        "Implementation Results & Analytics",
+        "Recommendations for Future Campaigns"
+      ]
+    }}
   }}
 }}
 ```"""

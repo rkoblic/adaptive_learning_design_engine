@@ -478,38 +478,17 @@ def finalize_curriculum():
                 for d in deliverables:
                     curriculum_parts.append(f"- {d}")
 
-        # Assessment rubrics
-        curriculum_parts.append("\n## Assessment Package")
-
-        # Deliverable rubric
-        deliverable_criteria = assessment.get('deliverable_rubric_criteria', [])
-        if deliverable_criteria:
-            curriculum_parts.append("\n### Deliverable Rubric")
-            curriculum_parts.append("| Criterion | Excellent (4) | Proficient (3) | Developing (2) | Beginning (1) |")
-            curriculum_parts.append("|-----------|--------------|----------------|----------------|---------------|")
-            for crit in deliverable_criteria:
-                name = crit.get('criterion', 'Criterion')
-                curriculum_parts.append(f"| {name} | Exceeds expectations | Meets expectations | Approaching expectations | Below expectations |")
-
-        # Reflection rubric
-        reflection_criteria = assessment.get('reflection_rubric_criteria', [])
-        if reflection_criteria:
-            curriculum_parts.append("\n### Reflection Quality Rubric (DEAL Model)")
-            curriculum_parts.append("| Dimension | Excellent (4) | Proficient (3) | Developing (2) | Beginning (1) |")
-            curriculum_parts.append("|-----------|--------------|----------------|----------------|---------------|")
-            for crit in reflection_criteria:
-                name = crit.get('criterion', 'Criterion')
-                curriculum_parts.append(f"| {name} | Exceeds expectations | Meets expectations | Approaching expectations | Below expectations |")
-
-        # Employer evaluation dimensions
-        employer_dims = assessment.get('employer_evaluation_dimensions', [])
-        if employer_dims:
-            curriculum_parts.append("\n### Employer Evaluation Form")
-            curriculum_parts.append("Please rate the student on the following dimensions (1-5 scale):")
-            for dim in employer_dims:
-                name = dim.get('dimension', 'Dimension')
-                desc = dim.get('description', '')
-                curriculum_parts.append(f"- **{name}**: {desc}")
+        # Final Deliverable
+        final_deliverable = assessment.get('final_deliverable', {})
+        if final_deliverable:
+            curriculum_parts.append("\n## Final Deliverable")
+            curriculum_parts.append(f"\n### {final_deliverable.get('title', 'Project Deliverable')}")
+            curriculum_parts.append(f"\n{final_deliverable.get('description', '')}")
+            components = final_deliverable.get('components', [])
+            if components:
+                curriculum_parts.append("\n**Components:**")
+                for comp in components:
+                    curriculum_parts.append(f"- {comp}")
 
         # Combine all parts
         curriculum_markdown = "\n".join(curriculum_parts)

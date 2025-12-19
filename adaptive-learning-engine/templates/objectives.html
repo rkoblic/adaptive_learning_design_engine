@@ -70,16 +70,18 @@
                 <h3 class="text-lg font-semibold text-gray-900">Assessment Strategy</h3>
             </div>
             <div class="p-6 space-y-6">
+                <!-- Final Deliverable -->
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-3">Final Deliverable</h4>
+                    <div id="final-deliverable" class="bg-gray-50 rounded-lg p-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
                 <!-- Grading Breakdown -->
                 <div>
                     <h4 class="font-medium text-gray-900 mb-3">Grading Breakdown</h4>
                     <div id="grading-breakdown" class="space-y-2"></div>
-                </div>
-
-                <!-- Rubric Criteria -->
-                <div>
-                    <h4 class="font-medium text-gray-900 mb-3">Evaluation Criteria</h4>
-                    <div id="rubric-criteria" class="space-y-2"></div>
                 </div>
             </div>
         </div>
@@ -236,6 +238,33 @@
             varContainer.appendChild(div);
         });
 
+        // Render final deliverable
+        const deliverableContainer = document.getElementById('final-deliverable');
+        const deliverable = assessmentData.final_deliverable || {};
+        if (deliverable.title) {
+            deliverableContainer.innerHTML = `
+                <h5 class="font-semibold text-gray-900 text-lg">${deliverable.title}</h5>
+                <p class="text-gray-600 mt-2">${deliverable.description || ''}</p>
+                ${deliverable.components && deliverable.components.length > 0 ? `
+                    <div class="mt-4">
+                        <p class="text-sm font-medium text-gray-700 mb-2">Components:</p>
+                        <ul class="space-y-1">
+                            ${deliverable.components.map(c => `
+                                <li class="flex items-center text-sm text-gray-600">
+                                    <svg class="w-4 h-4 text-primary mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    ${c}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+            `;
+        } else {
+            deliverableContainer.innerHTML = '<p class="text-gray-500 italic">No deliverable specified</p>';
+        }
+
         // Render grading breakdown
         const gradingContainer = document.getElementById('grading-breakdown');
         gradingContainer.innerHTML = '';
@@ -255,23 +284,6 @@
             `;
             gradingContainer.appendChild(div);
         }
-
-        // Render rubric criteria
-        const rubricContainer = document.getElementById('rubric-criteria');
-        rubricContainer.innerHTML = '';
-        const criteria = [
-            ...(assessmentData.deliverable_rubric_criteria || []),
-            ...(assessmentData.reflection_rubric_criteria || [])
-        ];
-        criteria.forEach(crit => {
-            const div = document.createElement('div');
-            div.className = 'p-3 bg-gray-50 rounded-lg';
-            div.innerHTML = `
-                <span class="font-medium text-gray-900">${crit.criterion || crit}</span>
-                ${crit.description ? `<p class="text-sm text-gray-500 mt-1">${crit.description}</p>` : ''}
-            `;
-            rubricContainer.appendChild(div);
-        });
 
         // Set hidden form data
         document.getElementById('objectives-data').value = JSON.stringify(objectivesData);
