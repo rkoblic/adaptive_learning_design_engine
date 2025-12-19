@@ -101,6 +101,9 @@
 <script>
     let outlineData = null;
 
+    // Objectives data passed from server (needed for API call)
+    const objectivesData = {{ objectives | tojson }};
+
     // Generate outline on page load
     document.addEventListener('DOMContentLoaded', function() {
         // Check if we already have data in session (coming back from later step)
@@ -118,7 +121,8 @@
         try {
             const response = await fetch('/api/outline/generate', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ objectives: objectivesData })
             });
 
             const data = await response.json();

@@ -385,12 +385,21 @@ def api_outline_generate():
     """API: Generate course outline."""
     try:
         confirmed_data = session.get('confirmed_data')
-        objectives = session.get('objectives')
+
+        # Try to get objectives from request body first (for serverless compatibility)
+        # Fall back to session if not provided in request
+        request_data = request.get_json() or {}
+        objectives = request_data.get('objectives') or session.get('objectives')
 
         if not confirmed_data:
             return json.dumps({'error': 'No confirmed data in session'}), 400
         if not objectives:
             return json.dumps({'error': 'Objectives not generated yet'}), 400
+
+        # Also save to session if we got them from request
+        if request_data.get('objectives'):
+            session['objectives'] = objectives
+            session.modified = True
 
         client = get_claude_client()
         result = client.generate_course_outline(confirmed_data, objectives)
