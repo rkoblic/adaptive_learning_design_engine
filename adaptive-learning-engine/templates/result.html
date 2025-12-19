@@ -411,12 +411,7 @@
 
         // Style Weekly Schedule section
         if (lowerTitle.includes('weekly schedule')) {
-            container.querySelectorAll('h3').forEach(h3 => {
-                if (h3.textContent.toLowerCase().startsWith('week')) {
-                    h3.classList.add('week-header');
-                }
-            });
-            // Style Kolb cycle phase headers
+            // First, style Kolb cycle phase headers
             container.querySelectorAll('h4').forEach(h4 => {
                 const text = h4.textContent.toLowerCase();
                 if (text.includes('concrete experience')) {
@@ -427,11 +422,46 @@
                     h4.classList.add('kolb-phase', 'kolb-conceptualization');
                 } else if (text.includes('active experimentation')) {
                     h4.classList.add('kolb-phase', 'kolb-experimentation');
-                } else if (text.includes('deliverables due')) {
+                } else if (text.includes('deliverables due') || text.includes('deliverable')) {
                     h4.classList.add('kolb-phase', 'kolb-deliverables');
                 } else if (text.includes('milestone')) {
                     h4.classList.add('kolb-phase', 'kolb-milestone');
                 }
+            });
+
+            // Wrap each week in a container
+            const weekHeaders = Array.from(container.querySelectorAll('h3')).filter(h3 =>
+                h3.textContent.toLowerCase().startsWith('week')
+            );
+
+            weekHeaders.forEach((weekHeader, index) => {
+                // Create week container
+                const weekContainer = document.createElement('div');
+                weekContainer.className = 'week-container';
+
+                // Style the header
+                weekHeader.classList.add('week-header');
+
+                // Create content wrapper
+                const weekContent = document.createElement('div');
+                weekContent.className = 'week-content';
+
+                // Find all siblings until the next week header
+                let nextSibling = weekHeader.nextElementSibling;
+                const contentElements = [];
+
+                while (nextSibling && !nextSibling.matches('h3')) {
+                    contentElements.push(nextSibling);
+                    nextSibling = nextSibling.nextElementSibling;
+                }
+
+                // Insert the container before the header
+                weekHeader.parentNode.insertBefore(weekContainer, weekHeader);
+
+                // Move header and content into container
+                weekContainer.appendChild(weekHeader);
+                contentElements.forEach(el => weekContent.appendChild(el));
+                weekContainer.appendChild(weekContent);
             });
         }
     }
@@ -568,41 +598,87 @@
         @apply bg-blue-50 text-blue-800 border-blue-500;
     }
 
+    /* Week container styling */
+    .week-container {
+        @apply bg-white rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden;
+    }
+
     /* Week header styling within Weekly Schedule */
     .week-header {
-        @apply text-lg font-semibold py-3 px-4 rounded-lg mt-8 mb-4 bg-purple-50 text-purple-800 border-l-4 border-purple-500;
+        @apply text-lg font-bold py-4 px-5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white m-0;
     }
     .week-header:first-of-type {
         @apply mt-0;
     }
 
+    /* Week content area */
+    .week-content {
+        @apply p-5;
+    }
+
     /* Kolb cycle phase styling */
     .kolb-phase {
-        @apply text-sm font-semibold uppercase tracking-wide py-2 px-3 rounded mt-5 mb-2 inline-block;
+        @apply text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full mt-6 mb-3 inline-flex items-center;
+    }
+    .kolb-phase::before {
+        content: '';
+        @apply w-2 h-2 rounded-full mr-2;
     }
     .kolb-experience {
         @apply bg-orange-100 text-orange-700;
     }
+    .kolb-experience::before {
+        @apply bg-orange-500;
+    }
     .kolb-reflection {
         @apply bg-sky-100 text-sky-700;
+    }
+    .kolb-reflection::before {
+        @apply bg-sky-500;
     }
     .kolb-conceptualization {
         @apply bg-violet-100 text-violet-700;
     }
+    .kolb-conceptualization::before {
+        @apply bg-violet-500;
+    }
     .kolb-experimentation {
         @apply bg-emerald-100 text-emerald-700;
+    }
+    .kolb-experimentation::before {
+        @apply bg-emerald-500;
     }
     .kolb-deliverables {
         @apply bg-rose-100 text-rose-700;
     }
+    .kolb-deliverables::before {
+        @apply bg-rose-500;
+    }
     .kolb-milestone {
         @apply bg-amber-100 text-amber-700;
     }
+    .kolb-milestone::before {
+        @apply bg-amber-500;
+    }
 
-    /* Add spacing after kolb phase content */
+    /* First kolb phase in a week doesn't need top margin */
+    .week-content .kolb-phase:first-child {
+        @apply mt-0;
+    }
+
+    /* Content following kolb phase headers */
     .kolb-phase + p,
-    .kolb-phase + ul {
-        @apply mt-2 mb-4 pl-3 border-l-2 border-gray-200;
+    .kolb-phase + ul,
+    .kolb-phase + ol {
+        @apply mt-2 mb-5 ml-4 pl-4 border-l-2 border-gray-200;
+    }
+
+    /* Nested lists in weekly schedule */
+    .week-content ul {
+        @apply space-y-2;
+    }
+    .week-content li {
+        @apply text-gray-700 leading-relaxed;
     }
     .prose p {
         @apply text-gray-600 leading-relaxed mb-4;
