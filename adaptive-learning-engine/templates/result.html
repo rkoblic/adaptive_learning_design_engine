@@ -242,12 +242,12 @@
             const colors = colorClasses[config.color] || colorClasses['blue'];
 
             const card = document.createElement('div');
-            card.className = `section-preview-card group cursor-pointer bg-white rounded-xl border-2 ${colors.border} hover:shadow-lg transition-all duration-200 overflow-hidden`;
+            card.className = `section-preview-card group cursor-pointer bg-white rounded-xl border-2 ${colors.border} hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col`;
             card.onclick = () => openModal(index);
 
-            // Card content
+            // Card content - using flex structure for equal height cards
             card.innerHTML = `
-                <div class="p-5">
+                <div class="p-5 flex-grow">
                     <div class="flex items-start justify-between mb-3">
                         <div class="w-12 h-12 rounded-xl ${colors.iconBg} flex items-center justify-center text-2xl">
                             ${config.icon}
@@ -261,7 +261,7 @@
                     </h3>
                     <p class="text-sm text-gray-500 line-clamp-2">${getPreview(section)}</p>
                 </div>
-                <div class="px-5 py-3 ${colors.bg} border-t ${colors.border}">
+                <div class="px-5 py-3 ${colors.bg} border-t ${colors.border} mt-auto">
                     <span class="text-xs font-medium ${colors.text}">Click to view details</span>
                 </div>
             `;
@@ -487,9 +487,17 @@
 </script>
 
 <style>
+    /* Card grid - ensure equal height cards per row */
+    #section-cards-grid {
+        align-items: stretch;
+    }
+
     /* Card preview styling */
     .section-preview-card {
         transition: all 0.2s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
     .section-preview-card:hover {
         transform: translateY(-2px);
