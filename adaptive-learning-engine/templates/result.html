@@ -45,118 +45,97 @@
         </div>
     </div>
 
-    <div class="flex gap-6">
-        <!-- Table of Contents Sidebar -->
-        <div class="hidden lg:block w-64 flex-shrink-0">
-            <div class="sticky top-4">
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                    <h3 class="font-semibold text-gray-900 mb-3">Jump to Section</h3>
-                    <nav class="space-y-1 text-sm" id="toc">
-                        <a href="#grading-breakdown" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
-                            <span class="mr-2">📊</span> Grading Breakdown
-                        </a>
-                        <a href="#learning-objectives" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
-                            <span class="mr-2">🎯</span> Learning Objectives
-                        </a>
-                        <a href="#weekly-schedule" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
-                            <span class="mr-2">📅</span> Weekly Schedule
-                        </a>
-                        <a href="#reflection-prompts" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
-                            <span class="mr-2">💭</span> Reflection Prompts
-                        </a>
-                        <a href="#assessment-package" class="toc-link block py-2 px-3 text-gray-600 hover:text-primary hover:bg-gray-50 rounded flex items-center">
-                            <span class="mr-2">📋</span> Assessment Package
-                        </a>
-                    </nav>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="mt-4 space-y-2">
-                    <a href="{{ url_for('download_curriculum') }}" class="flex items-center justify-center w-full px-4 py-3 bg-primary text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                        Download Markdown
-                    </a>
-                    <button onclick="copyToClipboard()" class="flex items-center justify-center w-full px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
-                        </svg>
-                        Copy to Clipboard
-                    </button>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="mt-4 space-y-2 text-sm">
-                    <a href="{{ url_for('back_to_confirm') }}" class="block text-gray-600 hover:text-primary">
-                        &larr; Edit Inputs
-                    </a>
-                    <a href="{{ url_for('intake_form') }}" class="block text-gray-600 hover:text-primary">
-                        Start New Course
-                    </a>
-                </div>
-            </div>
+    <!-- Action Bar -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <span class="text-sm text-gray-500" id="sectionCount">6 sections</span>
+            <span class="text-gray-300">|</span>
+            <a href="{{ url_for('back_to_confirm') }}" class="text-sm text-gray-600 hover:text-primary">
+                &larr; Edit Inputs
+            </a>
+            <a href="{{ url_for('intake_form') }}" class="text-sm text-gray-600 hover:text-primary">
+                Start New Course
+            </a>
         </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 min-w-0">
-            <!-- Mobile Actions -->
-            <div class="lg:hidden mb-4 flex gap-2">
-                <a href="{{ url_for('download_curriculum') }}" class="flex-1 flex items-center justify-center px-4 py-2 bg-primary text-white font-medium rounded-lg">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                    </svg>
-                    Download
-                </a>
-                <button onclick="copyToClipboard()" class="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
-                    </svg>
-                    Copy
-                </button>
-            </div>
-
-            <!-- Quick Actions Bar (Mobile + Desktop) -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <button onclick="toggleAllSections()" id="toggleAllBtn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
-                        </svg>
-                        <span id="toggleAllText">Expand All</span>
-                    </button>
-                    <span class="text-sm text-gray-500 hidden sm:inline" id="sectionCount">6 sections</span>
-                </div>
-                <a href="{{ url_for('download_curriculum') }}" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-indigo-700 transition-colors flex items-center">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                    </svg>
-                    Download
-                </a>
-            </div>
-
-            <!-- Curriculum Content (will be transformed into collapsible sections) -->
-            <div class="curriculum-content" id="curriculum-container">
-                <div class="prose prose-indigo max-w-none hidden" id="original-content">
-                    {{ curriculum_html|safe }}
-                </div>
-                <div id="collapsible-sections"></div>
-            </div>
-
-            <!-- Mobile Navigation -->
-            <div class="lg:hidden mt-6 flex justify-between">
-                <a href="{{ url_for('back_to_confirm') }}" class="text-gray-600 hover:text-primary">
-                    &larr; Edit Inputs
-                </a>
-                <a href="{{ url_for('intake_form') }}" class="text-primary hover:underline">
-                    Start New Course
-                </a>
-            </div>
+        <div class="flex items-center gap-2">
+            <button onclick="copyToClipboard()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                </svg>
+                Copy
+            </button>
+            <a href="{{ url_for('download_curriculum') }}" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-indigo-700 transition-colors flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Download
+            </a>
         </div>
+    </div>
+
+    <!-- Course Overview Card (always visible) -->
+    <div id="course-overview-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <!-- Will be populated with H1 content -->
+    </div>
+
+    <!-- Section Cards Grid -->
+    <div id="section-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <!-- Cards will be dynamically populated -->
+    </div>
+
+    <!-- Hidden original content for parsing -->
+    <div class="prose prose-indigo max-w-none hidden" id="original-content">
+        {{ curriculum_html|safe }}
     </div>
 
     <!-- Hidden textarea for clipboard -->
     <textarea id="markdown-content" class="hidden">{{ curriculum_markdown }}</textarea>
+</div>
+
+<!-- Section Detail Modal -->
+<div id="section-modal" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div class="modal-backdrop absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
+
+    <!-- Modal Content -->
+    <div class="modal-container absolute inset-4 md:inset-8 lg:inset-12 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <!-- Modal Header -->
+        <div id="modal-header" class="flex items-center justify-between px-6 py-4 border-b">
+            <div class="flex items-center">
+                <span id="modal-icon" class="text-3xl mr-4">📚</span>
+                <div>
+                    <h2 id="modal-title" class="text-xl font-bold text-gray-900">Section Title</h2>
+                    <p id="modal-subtitle" class="text-sm text-gray-500">Click outside or press Escape to close</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <!-- Navigation buttons -->
+                <button onclick="navigateSection(-1)" id="prev-section-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Previous section">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <button onclick="navigateSection(1)" id="next-section-btn" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Next section">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+                <div class="w-px h-6 bg-gray-200 mx-2"></div>
+                <button onclick="closeModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Close">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div id="modal-body" class="flex-1 overflow-y-auto p-6 md:p-8">
+            <div id="modal-content" class="prose prose-indigo max-w-none">
+                <!-- Section content will be injected here -->
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Back to Top Button -->
@@ -186,13 +165,17 @@
 
     // Color classes for each section type
     const colorClasses = {
-        'blue': { header: 'bg-blue-50 border-blue-200', title: 'text-blue-800', icon: 'bg-blue-100' },
-        'green': { header: 'bg-green-50 border-green-200', title: 'text-green-800', icon: 'bg-green-100' },
-        'purple': { header: 'bg-purple-50 border-purple-200', title: 'text-purple-800', icon: 'bg-purple-100' },
-        'amber': { header: 'bg-amber-50 border-amber-200', title: 'text-amber-800', icon: 'bg-amber-100' },
-        'teal': { header: 'bg-teal-50 border-teal-200', title: 'text-teal-800', icon: 'bg-teal-100' },
-        'indigo': { header: 'bg-indigo-50 border-indigo-200', title: 'text-indigo-800', icon: 'bg-indigo-100' }
+        'blue': { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-800', iconBg: 'bg-blue-100', headerBg: 'bg-blue-50' },
+        'green': { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-800', iconBg: 'bg-green-100', headerBg: 'bg-green-50' },
+        'purple': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-800', iconBg: 'bg-purple-100', headerBg: 'bg-purple-50' },
+        'amber': { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-800', iconBg: 'bg-amber-100', headerBg: 'bg-amber-50' },
+        'teal': { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-800', iconBg: 'bg-teal-100', headerBg: 'bg-teal-50' },
+        'indigo': { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-800', iconBg: 'bg-indigo-100', headerBg: 'bg-indigo-50' }
     };
+
+    // Store parsed sections globally
+    let parsedSections = [];
+    let currentModalIndex = -1;
 
     // Determine section type from title
     function getSectionType(title) {
@@ -203,23 +186,23 @@
         if (lowerTitle.includes('reflection')) return 'reflection';
         if (lowerTitle.includes('assessment') || lowerTitle.includes('rubric') || lowerTitle.includes('evaluation')) return 'assessment';
         if (lowerTitle.includes('grading') || lowerTitle.includes('breakdown')) return 'grading';
-        return 'blue'; // default
+        return 'course'; // default
     }
 
-    // Transform content into collapsible sections
+    // Initialize the card grid layout
     document.addEventListener('DOMContentLoaded', function() {
         const originalContent = document.getElementById('original-content');
-        const sectionsContainer = document.getElementById('collapsible-sections');
+        const overviewCard = document.getElementById('course-overview-card');
+        const cardsGrid = document.getElementById('section-cards-grid');
 
         // Parse content and group by H2 sections
-        const sections = [];
         let currentSection = null;
         let preContent = []; // Content before first H2
 
         Array.from(originalContent.children).forEach(node => {
             if (node.tagName === 'H2') {
                 if (currentSection) {
-                    sections.push(currentSection);
+                    parsedSections.push(currentSection);
                 }
                 currentSection = {
                     title: node.textContent.trim(),
@@ -233,149 +216,193 @@
             }
         });
         if (currentSection) {
-            sections.push(currentSection);
+            parsedSections.push(currentSection);
         }
 
-        // Add pre-content (usually H1 title) as expanded intro
+        // Populate course overview card with pre-content (H1 title, etc.)
         if (preContent.length > 0) {
-            const introCard = document.createElement('div');
-            introCard.className = 'bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4';
-            preContent.forEach(el => introCard.appendChild(el));
-            sectionsContainer.appendChild(introCard);
+            const proseDiv = document.createElement('div');
+            proseDiv.className = 'prose prose-indigo max-w-none';
+            preContent.forEach(el => proseDiv.appendChild(el));
+            overviewCard.appendChild(proseDiv);
+        } else {
+            overviewCard.classList.add('hidden');
         }
 
-        // Build collapsible cards for each section
-        sections.forEach((section, index) => {
+        // Build preview cards for each section
+        parsedSections.forEach((section, index) => {
             const sectionType = getSectionType(section.title);
             const config = sectionConfig[sectionType] || sectionConfig['course'];
             const colors = colorClasses[config.color] || colorClasses['blue'];
 
             const card = document.createElement('div');
-            card.className = 'section-card bg-white rounded-lg shadow-sm border border-gray-200 mb-4 overflow-hidden';
-            card.id = section.id;
+            card.className = `section-preview-card group cursor-pointer bg-white rounded-xl border-2 ${colors.border} hover:shadow-lg transition-all duration-200 overflow-hidden`;
+            card.onclick = () => openModal(index);
 
-            // Header
-            const header = document.createElement('div');
-            header.className = `section-header px-6 py-4 cursor-pointer flex items-center justify-between ${colors.header} border-b`;
-            header.onclick = () => toggleSection(card);
-
-            header.innerHTML = `
-                <div class="flex items-center">
-                    <span class="text-2xl mr-3">${config.icon}</span>
-                    <h2 class="text-lg font-semibold ${colors.title}">${section.title}</h2>
+            // Card content
+            card.innerHTML = `
+                <div class="p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="w-12 h-12 rounded-xl ${colors.iconBg} flex items-center justify-center text-2xl">
+                            ${config.icon}
+                        </div>
+                        <svg class="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2 group-hover:${colors.text} transition-colors">${section.title}</h3>
+                    <p class="text-sm text-gray-500 line-clamp-2">${getPreview(section)}</p>
                 </div>
-                <svg class="section-chevron w-5 h-5 ${colors.title} transform transition-transform ${index === 0 ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+                <div class="px-5 py-3 ${colors.bg} border-t ${colors.border}">
+                    <span class="text-xs font-medium ${colors.text}">Click to view details</span>
+                </div>
             `;
 
-            // Content
-            const content = document.createElement('div');
-            content.className = `section-content p-6 prose prose-indigo max-w-none ${index === 0 ? '' : 'hidden'}`;
-            section.elements.forEach(el => content.appendChild(el));
-
-            // Style subheaders within Learning Objectives section
-            if (section.title.toLowerCase().includes('learning objectives')) {
-                content.querySelectorAll('h4').forEach(h4 => {
-                    if (h4.textContent.toLowerCase().includes('fixed objectives')) {
-                        h4.classList.add('objective-subheader', 'objective-fixed');
-                    } else if (h4.textContent.toLowerCase().includes('variable objectives')) {
-                        h4.classList.add('objective-subheader', 'objective-variable');
-                    }
-                });
-            }
-
-            // Style week headers and subsections within Weekly Schedule section
-            if (section.title.toLowerCase().includes('weekly schedule')) {
-                content.querySelectorAll('h3').forEach(h3 => {
-                    if (h3.textContent.toLowerCase().startsWith('week')) {
-                        h3.classList.add('week-header');
-                    }
-                });
-                // Style Kolb cycle phase headers
-                content.querySelectorAll('h4').forEach(h4 => {
-                    const text = h4.textContent.toLowerCase();
-                    if (text.includes('concrete experience')) {
-                        h4.classList.add('kolb-phase', 'kolb-experience');
-                    } else if (text.includes('reflective observation')) {
-                        h4.classList.add('kolb-phase', 'kolb-reflection');
-                    } else if (text.includes('abstract conceptualization')) {
-                        h4.classList.add('kolb-phase', 'kolb-conceptualization');
-                    } else if (text.includes('active experimentation')) {
-                        h4.classList.add('kolb-phase', 'kolb-experimentation');
-                    } else if (text.includes('deliverables due')) {
-                        h4.classList.add('kolb-phase', 'kolb-deliverables');
-                    } else if (text.includes('milestone')) {
-                        h4.classList.add('kolb-phase', 'kolb-milestone');
-                    }
-                });
-            }
-
-            card.appendChild(header);
-            card.appendChild(content);
-            sectionsContainer.appendChild(card);
+            cardsGrid.appendChild(card);
         });
 
         // Update section count
-        document.getElementById('sectionCount').textContent = `${sections.length} sections`;
-
-        // Update ToC links to work with collapsible sections
-        updateTocLinks();
+        document.getElementById('sectionCount').textContent = `${parsedSections.length} sections`;
     });
 
-    // Toggle individual section
-    function toggleSection(card) {
-        const content = card.querySelector('.section-content');
-        const chevron = card.querySelector('.section-chevron');
-        content.classList.toggle('hidden');
-        chevron.classList.toggle('rotate-180');
+    // Get preview text for a section
+    function getPreview(section) {
+        // Try to get text from first paragraph
+        const firstPara = section.elements.find(el => el.tagName === 'P');
+        if (firstPara) {
+            const text = firstPara.textContent.trim();
+            return text.length > 100 ? text.substring(0, 100) + '...' : text;
+        }
+
+        // Count list items
+        const lists = section.elements.filter(el => el.tagName === 'UL' || el.tagName === 'OL');
+        if (lists.length > 0) {
+            const itemCount = lists.reduce((sum, list) => sum + list.querySelectorAll('li').length, 0);
+            return `Contains ${itemCount} items`;
+        }
+
+        // Count subheadings (for weekly schedule)
+        const subheadings = section.elements.filter(el => el.tagName === 'H3');
+        if (subheadings.length > 0) {
+            return `${subheadings.length} subsections`;
+        }
+
+        return 'Click to view full content';
     }
 
-    // Toggle all sections
-    let allExpanded = false; // Start with most collapsed
-    function toggleAllSections() {
-        allExpanded = !allExpanded;
-        const cards = document.querySelectorAll('.section-card');
-        cards.forEach(card => {
-            const content = card.querySelector('.section-content');
-            const chevron = card.querySelector('.section-chevron');
-            if (allExpanded) {
-                content.classList.remove('hidden');
-                chevron.classList.add('rotate-180');
-            } else {
-                content.classList.add('hidden');
-                chevron.classList.remove('rotate-180');
-            }
+    // Open modal with section content
+    function openModal(index) {
+        currentModalIndex = index;
+        const section = parsedSections[index];
+        const sectionType = getSectionType(section.title);
+        const config = sectionConfig[sectionType] || sectionConfig['course'];
+        const colors = colorClasses[config.color] || colorClasses['blue'];
+
+        // Update modal header
+        document.getElementById('modal-icon').textContent = config.icon;
+        document.getElementById('modal-title').textContent = section.title;
+        document.getElementById('modal-subtitle').textContent = `Section ${index + 1} of ${parsedSections.length}`;
+
+        // Style header with section color
+        const modalHeader = document.getElementById('modal-header');
+        modalHeader.className = `flex items-center justify-between px-6 py-4 border-b ${colors.headerBg} ${colors.border}`;
+
+        // Populate modal content
+        const modalContent = document.getElementById('modal-content');
+        modalContent.innerHTML = '';
+        section.elements.forEach(el => {
+            const cloned = el.cloneNode(true);
+            modalContent.appendChild(cloned);
         });
-        document.getElementById('toggleAllText').textContent = allExpanded ? 'Collapse All' : 'Expand All';
+
+        // Apply special styling
+        applySpecialStyling(modalContent, section.title);
+
+        // Update navigation buttons
+        document.getElementById('prev-section-btn').disabled = index === 0;
+        document.getElementById('prev-section-btn').classList.toggle('opacity-30', index === 0);
+        document.getElementById('next-section-btn').disabled = index === parsedSections.length - 1;
+        document.getElementById('next-section-btn').classList.toggle('opacity-30', index === parsedSections.length - 1);
+
+        // Show modal
+        const modal = document.getElementById('section-modal');
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+
+        // Scroll modal body to top
+        document.getElementById('modal-body').scrollTop = 0;
     }
 
-    // Update ToC links to expand sections when clicked
-    function updateTocLinks() {
-        document.querySelectorAll('#toc a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetCard = document.getElementById(targetId);
-                if (targetCard) {
-                    // Expand the section
-                    const content = targetCard.querySelector('.section-content');
-                    const chevron = targetCard.querySelector('.section-chevron');
-                    content.classList.remove('hidden');
-                    chevron.classList.add('rotate-180');
+    // Close modal
+    function closeModal() {
+        const modal = document.getElementById('section-modal');
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+        currentModalIndex = -1;
+    }
 
-                    // Scroll to it
-                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Navigate between sections in modal
+    function navigateSection(direction) {
+        const newIndex = currentModalIndex + direction;
+        if (newIndex >= 0 && newIndex < parsedSections.length) {
+            openModal(newIndex);
+        }
+    }
 
-                    // Highlight in ToC
-                    document.querySelectorAll('#toc a').forEach(l => {
-                        l.classList.remove('bg-indigo-50', 'text-primary', 'font-medium');
-                    });
-                    this.classList.add('bg-indigo-50', 'text-primary', 'font-medium');
+    // Apply special styling for specific section types
+    function applySpecialStyling(container, title) {
+        const lowerTitle = title.toLowerCase();
+
+        // Style Learning Objectives section
+        if (lowerTitle.includes('learning objectives')) {
+            container.querySelectorAll('h4').forEach(h4 => {
+                if (h4.textContent.toLowerCase().includes('fixed objectives')) {
+                    h4.classList.add('objective-subheader', 'objective-fixed');
+                } else if (h4.textContent.toLowerCase().includes('variable objectives')) {
+                    h4.classList.add('objective-subheader', 'objective-variable');
                 }
             });
-        });
+        }
+
+        // Style Weekly Schedule section
+        if (lowerTitle.includes('weekly schedule')) {
+            container.querySelectorAll('h3').forEach(h3 => {
+                if (h3.textContent.toLowerCase().startsWith('week')) {
+                    h3.classList.add('week-header');
+                }
+            });
+            // Style Kolb cycle phase headers
+            container.querySelectorAll('h4').forEach(h4 => {
+                const text = h4.textContent.toLowerCase();
+                if (text.includes('concrete experience')) {
+                    h4.classList.add('kolb-phase', 'kolb-experience');
+                } else if (text.includes('reflective observation')) {
+                    h4.classList.add('kolb-phase', 'kolb-reflection');
+                } else if (text.includes('abstract conceptualization')) {
+                    h4.classList.add('kolb-phase', 'kolb-conceptualization');
+                } else if (text.includes('active experimentation')) {
+                    h4.classList.add('kolb-phase', 'kolb-experimentation');
+                } else if (text.includes('deliverables due')) {
+                    h4.classList.add('kolb-phase', 'kolb-deliverables');
+                } else if (text.includes('milestone')) {
+                    h4.classList.add('kolb-phase', 'kolb-milestone');
+                }
+            });
+        }
     }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (currentModalIndex === -1) return; // Modal not open
+
+        if (e.key === 'Escape') {
+            closeModal();
+        } else if (e.key === 'ArrowLeft') {
+            navigateSection(-1);
+        } else if (e.key === 'ArrowRight') {
+            navigateSection(1);
+        }
+    });
 
     // Copy to clipboard
     function copyToClipboard() {
@@ -422,6 +449,55 @@
 </script>
 
 <style>
+    /* Card preview styling */
+    .section-preview-card {
+        transition: all 0.2s ease-in-out;
+    }
+    .section-preview-card:hover {
+        transform: translateY(-2px);
+    }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Modal styling */
+    #section-modal {
+        animation: fadeIn 0.15s ease-out;
+    }
+    .modal-backdrop {
+        animation: fadeIn 0.15s ease-out;
+    }
+    .modal-container {
+        animation: slideUp 0.2s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Modal scrollbar styling */
+    #modal-body::-webkit-scrollbar {
+        width: 8px;
+    }
+    #modal-body::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+    #modal-body::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    #modal-body::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
     /* Prose styling for curriculum content */
     .prose h1 {
         @apply text-3xl font-bold text-gray-900 border-b border-gray-200 pb-4 mb-6;
@@ -450,6 +526,9 @@
     /* Week header styling within Weekly Schedule */
     .week-header {
         @apply text-lg font-semibold py-3 px-4 rounded-lg mt-8 mb-4 bg-purple-50 text-purple-800 border-l-4 border-purple-500;
+    }
+    .week-header:first-of-type {
+        @apply mt-0;
     }
 
     /* Kolb cycle phase styling */
@@ -511,34 +590,20 @@
         @apply my-8 border-gray-200;
     }
 
-    /* Section card hover effects */
-    .section-header:hover {
-        filter: brightness(0.97);
-    }
-
-    /* Smooth transitions */
-    .section-content {
-        transition: all 0.2s ease-in-out;
-    }
-
-    /* Print styles - expand all sections */
+    /* Print styles */
     @media print {
-        .sticky, #back-to-top, #toast, .section-header svg {
+        #back-to-top, #toast, #section-modal {
             display: none !important;
         }
-        .section-content {
-            display: block !important;
+        .section-preview-card {
+            break-inside: avoid;
         }
-        .section-content.hidden {
-            display: block !important;
-        }
-        .section-card {
-            box-shadow: none !important;
-            page-break-inside: avoid;
-        }
-        .curriculum-content {
-            box-shadow: none !important;
-            border: none !important;
+    }
+
+    /* Responsive action bar */
+    @media (max-width: 640px) {
+        #section-cards-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
