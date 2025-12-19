@@ -303,6 +303,87 @@
             </div>
         </div>
 
+        <!-- Standard Learning Objectives Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-6">
+            <div class="flex items-center mb-4">
+                <div class="bg-indigo-100 rounded-lg p-2 mr-3">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Standard Learning Objectives</h2>
+                    <p class="text-sm text-gray-500">Transferable professional skills included in this course</p>
+                </div>
+            </div>
+
+            <p class="text-sm text-gray-600 mb-4">These foundational skills apply to most experiential learning projects. Uncheck any that don't apply to this specific project.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="fixed-objectives">
+                {% set objectives = raw.institution.fixed_objectives or ['project_management', 'professional_communication', 'time_management', 'critical_thinking', 'collaboration', 'self_reflection'] %}
+
+                <label class="inline-flex items-start p-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 cursor-pointer border border-indigo-200">
+                    <input type="checkbox" name="fixed_objectives" value="project_management"
+                           {% if 'project_management' in objectives %}checked{% endif %}
+                           class="mt-0.5 rounded border-gray-300 text-primary focus:ring-primary">
+                    <div class="ml-3">
+                        <span class="text-sm font-medium text-indigo-800">Project Management</span>
+                        <p class="text-xs text-indigo-600">Planning, organizing, and executing work</p>
+                    </div>
+                </label>
+
+                <label class="inline-flex items-start p-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 cursor-pointer border border-indigo-200">
+                    <input type="checkbox" name="fixed_objectives" value="professional_communication"
+                           {% if 'professional_communication' in objectives %}checked{% endif %}
+                           class="mt-0.5 rounded border-gray-300 text-primary focus:ring-primary">
+                    <div class="ml-3">
+                        <span class="text-sm font-medium text-indigo-800">Professional Communication</span>
+                        <p class="text-xs text-indigo-600">Written and verbal workplace communication</p>
+                    </div>
+                </label>
+
+                <label class="inline-flex items-start p-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 cursor-pointer border border-indigo-200">
+                    <input type="checkbox" name="fixed_objectives" value="time_management"
+                           {% if 'time_management' in objectives %}checked{% endif %}
+                           class="mt-0.5 rounded border-gray-300 text-primary focus:ring-primary">
+                    <div class="ml-3">
+                        <span class="text-sm font-medium text-indigo-800">Time Management</span>
+                        <p class="text-xs text-indigo-600">Meeting deadlines and managing priorities</p>
+                    </div>
+                </label>
+
+                <label class="inline-flex items-start p-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 cursor-pointer border border-indigo-200">
+                    <input type="checkbox" name="fixed_objectives" value="critical_thinking"
+                           {% if 'critical_thinking' in objectives %}checked{% endif %}
+                           class="mt-0.5 rounded border-gray-300 text-primary focus:ring-primary">
+                    <div class="ml-3">
+                        <span class="text-sm font-medium text-indigo-800">Critical Thinking</span>
+                        <p class="text-xs text-indigo-600">Problem-solving and analytical reasoning</p>
+                    </div>
+                </label>
+
+                <label class="inline-flex items-start p-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 cursor-pointer border border-indigo-200">
+                    <input type="checkbox" name="fixed_objectives" value="collaboration"
+                           {% if 'collaboration' in objectives %}checked{% endif %}
+                           class="mt-0.5 rounded border-gray-300 text-primary focus:ring-primary">
+                    <div class="ml-3">
+                        <span class="text-sm font-medium text-indigo-800">Collaboration & Teamwork</span>
+                        <p class="text-xs text-indigo-600">Working effectively with others</p>
+                    </div>
+                </label>
+
+                <label class="inline-flex items-start p-3 bg-indigo-50 rounded-lg hover:bg-indigo-100 cursor-pointer border border-indigo-200">
+                    <input type="checkbox" name="fixed_objectives" value="self_reflection"
+                           {% if 'self_reflection' in objectives %}checked{% endif %}
+                           class="mt-0.5 rounded border-gray-300 text-primary focus:ring-primary">
+                    <div class="ml-3">
+                        <span class="text-sm font-medium text-indigo-800">Self-Reflection</span>
+                        <p class="text-xs text-indigo-600">Metacognition and growth mindset</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
         <!-- Hidden JSON fields for form submission -->
         <input type="hidden" name="confirmed_skills" id="confirmed_skills_input">
         <input type="hidden" name="confirmed_coursework" id="confirmed_coursework_input">

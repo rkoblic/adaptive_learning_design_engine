@@ -137,7 +137,11 @@ def extract_and_confirm():
                 'hours_per_week': request.form.get('hours_per_week', '9'),
                 'institution_name': request.form.get('institution_name', ''),
                 'grading_scale': request.form.get('grading_scale', 'Letter Grade (A-F)'),
-                'competency_framework': request.form.getlist('competency_framework')
+                'competency_framework': request.form.getlist('competency_framework'),
+                'fixed_objectives': request.form.getlist('fixed_objectives') or [
+                    'project_management', 'professional_communication', 'time_management',
+                    'critical_thinking', 'collaboration', 'self_reflection'
+                ]
             }
         }
 
@@ -225,14 +229,21 @@ def generate_curriculum():
                 'scaffolding_recommendation': request.form.get('scaffolding_recommendation', 'moderate'),
                 'overall_fit': request.form.get('overall_fit', 'good')
             },
-            'institution': session.get('raw_inputs', {}).get('institution', {
-                'credit_hours': '3',
-                'term_length_weeks': '14',
-                'hours_per_week': '9',
-                'institution_name': '',
-                'grading_scale': 'Letter Grade (A-F)',
-                'competency_framework': []
-            })
+            'institution': {
+                **session.get('raw_inputs', {}).get('institution', {
+                    'credit_hours': '3',
+                    'term_length_weeks': '14',
+                    'hours_per_week': '9',
+                    'institution_name': '',
+                    'grading_scale': 'Letter Grade (A-F)',
+                    'competency_framework': []
+                }),
+                # Override with form submission to capture user's final selection
+                'fixed_objectives': request.form.getlist('fixed_objectives') or [
+                    'project_management', 'professional_communication', 'time_management',
+                    'critical_thinking', 'collaboration', 'self_reflection'
+                ]
+            }
         }
 
         # Generate curriculum

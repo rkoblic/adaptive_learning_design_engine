@@ -45,6 +45,20 @@ def build_curriculum_prompt(confirmed_data: dict) -> str:
 
     competency_frameworks = ", ".join(institution.get('competency_framework', [])) or "None"
 
+    # Build fixed objectives list from user selection
+    fixed_objectives_map = {
+        'project_management': 'Project management and organization',
+        'professional_communication': 'Professional communication',
+        'time_management': 'Time management and accountability',
+        'critical_thinking': 'Critical thinking and problem-solving',
+        'collaboration': 'Collaboration/teamwork',
+        'self_reflection': 'Self-reflection and metacognition'
+    }
+    selected_fixed = institution.get('fixed_objectives', list(fixed_objectives_map.keys()))
+    fixed_objectives_list = "\n".join(
+        [f"- {fixed_objectives_map.get(obj, obj)}" for obj in selected_fixed]
+    ) or "- None selected"
+
     prompt = f"""You are an expert instructional designer specializing in experiential learning and work-integrated learning curriculum. You design credit-bearing courses that transform workplace projects into structured educational experiences.
 
 Your designs are grounded in established learning science:
@@ -107,13 +121,10 @@ Generate a complete course shell including ALL of the following sections:
 ### 2. LEARNING OBJECTIVES
 
 #### Fixed Objectives (Transferable Professional Skills)
-Generate 4-6 objectives covering:
-- Project management and organization
-- Professional communication
-- Time management and accountability
-- Collaboration/teamwork (if team project)
-- Critical thinking and problem-solving
-- Self-reflection and metacognition
+Generate objectives covering ONLY the selected areas (user has chosen these):
+{fixed_objectives_list}
+
+Note: Only generate objectives for the areas listed above. If none are selected, skip this section entirely.
 
 #### Variable Objectives (Project-Specific)
 Generate 3-5 objectives derived from:
