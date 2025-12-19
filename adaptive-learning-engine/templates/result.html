@@ -73,9 +73,11 @@
         </div>
     </div>
 
-    <!-- Course Overview Card (always visible) -->
-    <div id="course-overview-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <!-- Will be populated with H1 content -->
+    <!-- Course Title Header -->
+    <div id="course-title-header" class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-8 mb-6 text-white">
+        <p class="text-indigo-200 text-sm font-medium uppercase tracking-wide mb-2">Generated Course Shell</p>
+        <h1 id="course-title-display" class="text-3xl md:text-4xl font-bold mb-2">Course Title</h1>
+        <p id="course-credit-display" class="text-indigo-100 text-lg"></p>
     </div>
 
     <!-- Section Cards Grid -->
@@ -189,10 +191,49 @@
         return 'course'; // default
     }
 
+    // Extract and display course title from Course Header section
+    function extractAndDisplayCourseTitle() {
+        // Find the Course Header section
+        const courseHeaderSection = parsedSections.find(s =>
+            s.title.toLowerCase().includes('course header') ||
+            s.title.toLowerCase().includes('course information')
+        );
+
+        let courseTitle = 'Course Shell';
+        let creditHours = '';
+
+        if (courseHeaderSection) {
+            // Look for course title in the section content
+            courseHeaderSection.elements.forEach(el => {
+                const text = el.textContent || '';
+
+                // Look for "Course Title:" pattern
+                const titleMatch = text.match(/Course Title:\s*(.+?)(?:\n|$|Credit)/i);
+                if (titleMatch && titleMatch[1]) {
+                    courseTitle = titleMatch[1].trim();
+                }
+
+                // Look for "Credit Hours:" pattern
+                const creditMatch = text.match(/Credit Hours?:\s*(\d+)/i);
+                if (creditMatch && creditMatch[1]) {
+                    creditHours = creditMatch[1] + ' Credit Hours';
+                }
+            });
+        }
+
+        // Update the header display
+        document.getElementById('course-title-display').textContent = courseTitle;
+        const creditDisplay = document.getElementById('course-credit-display');
+        if (creditHours) {
+            creditDisplay.textContent = creditHours;
+        } else {
+            creditDisplay.classList.add('hidden');
+        }
+    }
+
     // Initialize the card grid layout
     document.addEventListener('DOMContentLoaded', function() {
         const originalContent = document.getElementById('original-content');
-        const overviewCard = document.getElementById('course-overview-card');
         const cardsGrid = document.getElementById('section-cards-grid');
 
         // Parse content and group by H2 sections
@@ -219,15 +260,8 @@
             parsedSections.push(currentSection);
         }
 
-        // Populate course overview card with pre-content (H1 title, etc.)
-        if (preContent.length > 0) {
-            const proseDiv = document.createElement('div');
-            proseDiv.className = 'prose prose-indigo max-w-none';
-            preContent.forEach(el => proseDiv.appendChild(el));
-            overviewCard.appendChild(proseDiv);
-        } else {
-            overviewCard.classList.add('hidden');
-        }
+        // Extract course title from Course Header section
+        extractAndDisplayCourseTitle();
 
         // Build preview cards for each section
         parsedSections.forEach((section, index) => {
@@ -250,7 +284,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                     </div>
-                    <h3 class="font-semibold text-gray-900 mb-2 group-hover:${colors.text} transition-colors">${section.title}</h3>
+                    <h3 class="font-semibold text-gray-900 mb-2 group-hover:${colors.text} transition-colors">
+                        <span class="text-gray-400 mr-1">${index + 1}.</span> ${section.title.toUpperCase()}
+                    </h3>
                     <p class="text-sm text-gray-500 line-clamp-2">${getPreview(section)}</p>
                 </div>
                 <div class="px-5 py-3 ${colors.bg} border-t ${colors.border}">
