@@ -271,6 +271,17 @@
             content.className = `section-content p-6 prose prose-indigo max-w-none ${index === 0 ? '' : 'hidden'}`;
             section.elements.forEach(el => content.appendChild(el));
 
+            // Style subheaders within Learning Objectives section
+            if (section.title.toLowerCase().includes('learning objectives')) {
+                content.querySelectorAll('h4').forEach(h4 => {
+                    if (h4.textContent.toLowerCase().includes('fixed objectives')) {
+                        h4.classList.add('objective-subheader', 'objective-fixed');
+                    } else if (h4.textContent.toLowerCase().includes('variable objectives')) {
+                        h4.classList.add('objective-subheader', 'objective-variable');
+                    }
+                });
+            }
+
             card.appendChild(header);
             card.appendChild(content);
             sectionsContainer.appendChild(card);
@@ -394,6 +405,17 @@
     }
     .prose h4 {
         @apply text-lg font-medium text-gray-700 mt-4 mb-2;
+    }
+
+    /* Learning Objectives subheader styling */
+    .objective-subheader {
+        @apply text-base font-semibold py-2 px-4 rounded-lg mt-6 mb-4 border-l-4;
+    }
+    .objective-fixed {
+        @apply bg-emerald-50 text-emerald-800 border-emerald-500;
+    }
+    .objective-variable {
+        @apply bg-blue-50 text-blue-800 border-blue-500;
     }
     .prose p {
         @apply text-gray-600 leading-relaxed mb-4;
