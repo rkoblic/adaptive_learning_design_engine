@@ -61,7 +61,7 @@ Generate learning objectives and assessment strategy as JSON. Your response must
 For EACH selected professional skill area above, generate ONE well-crafted learning objective that:
 - Begins with a Bloom's taxonomy action verb
 - Is measurable and specific to this experiential context
-- Includes the cognitive level in parentheses
+- Do NOT include the cognitive level in the text (it will be shown separately as a tag)
 
 **Variable Objectives (Project-Specific)**
 Generate 3-5 objectives derived from:
@@ -72,7 +72,7 @@ Generate 3-5 objectives derived from:
 Each variable objective must:
 - Begin with a Bloom's taxonomy action verb
 - Be measurable and specific
-- Include the cognitive level in parentheses (Apply, Analyze, Evaluate, or Create)
+- Do NOT include the cognitive level in the text (it will be shown separately as a tag)
 - Reference a specific skill gap or project requirement
 
 Bloom's Levels and Example Verbs:
