@@ -157,12 +157,12 @@
 <script>
     // Section configuration with colors and icons
     const sectionConfig = {
-        'course': { color: 'blue', icon: '📚', title: 'Course Header' },
-        'learning': { color: 'green', icon: '🎯', title: 'Learning Objectives' },
-        'weekly': { color: 'purple', icon: '📅', title: 'Weekly Schedule' },
-        'reflection': { color: 'amber', icon: '💭', title: 'Reflection Prompts' },
-        'assessment': { color: 'teal', icon: '📋', title: 'Assessment Package' },
-        'grading': { color: 'indigo', icon: '📊', title: 'Grading Breakdown' }
+        'course': { color: 'blue', icon: '📚', title: 'Course Overview', order: 1 },
+        'learning': { color: 'green', icon: '🎯', title: 'Learning Objectives', order: 2 },
+        'grading': { color: 'indigo', icon: '📊', title: 'Grading Breakdown', order: 3 },
+        'weekly': { color: 'purple', icon: '📅', title: 'Weekly Schedule', order: 4 },
+        'reflection': { color: 'amber', icon: '💭', title: 'Reflection Prompts', order: 5 },
+        'assessment': { color: 'teal', icon: '📋', title: 'Assessment Package', order: 6 }
     };
 
     // Color classes for each section type
@@ -193,11 +193,11 @@
 
     // Extract and display course title from Course Header section
     function extractAndDisplayCourseTitle() {
-        // Find the Course Header section
-        const courseHeaderSection = parsedSections.find(s =>
-            s.title.toLowerCase().includes('course header') ||
-            s.title.toLowerCase().includes('course information')
-        );
+        // Find the Course Overview/Header section
+        const courseHeaderSection = parsedSections.find(s => {
+            const type = getSectionType(s.title);
+            return type === 'course';
+        });
 
         let courseTitle = 'Course Shell';
         let creditHours = '';
@@ -260,6 +260,15 @@
             parsedSections.push(currentSection);
         }
 
+        // Sort sections by configured order
+        parsedSections.sort((a, b) => {
+            const typeA = getSectionType(a.title);
+            const typeB = getSectionType(b.title);
+            const orderA = sectionConfig[typeA]?.order || 99;
+            const orderB = sectionConfig[typeB]?.order || 99;
+            return orderA - orderB;
+        });
+
         // Extract course title from Course Header section
         extractAndDisplayCourseTitle();
 
@@ -285,7 +294,7 @@
                         </svg>
                     </div>
                     <h3 class="font-semibold text-gray-900 mb-2 group-hover:${colors.text} transition-colors">
-                        <span class="text-gray-400 mr-1">${index + 1}.</span> ${section.title.toUpperCase()}
+                        <span class="text-gray-400 mr-1">${index + 1}.</span> ${config.title.toUpperCase()}
                     </h3>
                     <p class="text-sm text-gray-500 line-clamp-2">${getPreview(section)}</p>
                 </div>
@@ -336,7 +345,7 @@
 
         // Update modal header
         document.getElementById('modal-icon').textContent = config.icon;
-        document.getElementById('modal-title').textContent = section.title;
+        document.getElementById('modal-title').textContent = config.title;
         document.getElementById('modal-subtitle').textContent = `Section ${index + 1} of ${parsedSections.length}`;
 
         // Style header with section color
