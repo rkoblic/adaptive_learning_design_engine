@@ -44,6 +44,18 @@ def get_claude_client():
     return claude_client
 
 
+def safe_json_loads(value: str, default=None):
+    """Safely parse JSON, returning default on failure."""
+    if default is None:
+        default = []
+    if not value or value.strip() == '':
+        return default
+    try:
+        return json.loads(value)
+    except (json.JSONDecodeError, TypeError):
+        return default
+
+
 def merge_user_project_inputs(ai_extraction: dict, user_inputs: dict) -> dict:
     """
     Merge user-provided optional fields with AI extraction results.
@@ -182,34 +194,34 @@ def extract_and_confirm():
 def generate_curriculum():
     """Step 2 → Step 3: Generate curriculum from confirmed data."""
     try:
-        # Build confirmed data from form submission
+        # Build confirmed data from form submission (using safe JSON parsing)
         confirmed_data = {
             'learner': {
                 'learner_name': request.form.get('learner_name', ''),
                 'academic_level': request.form.get('academic_level', ''),
                 'major_or_program': request.form.get('major_or_program', ''),
-                'confirmed_skills': json.loads(request.form.get('confirmed_skills', '[]')),
+                'confirmed_skills': safe_json_loads(request.form.get('confirmed_skills', '[]')),
                 'experience_level': request.form.get('experience_level', ''),
-                'confirmed_coursework': json.loads(request.form.get('confirmed_coursework', '[]')),
+                'confirmed_coursework': safe_json_loads(request.form.get('confirmed_coursework', '[]')),
                 'career_goals': request.form.get('career_goals', ''),
-                'learning_preferences': json.loads(request.form.get('learning_preferences', '[]'))
+                'learning_preferences': safe_json_loads(request.form.get('learning_preferences', '[]'))
             },
             'project': {
                 'company_name': request.form.get('company_name', ''),
                 'industry': request.form.get('industry', ''),
                 'project_title': request.form.get('project_title', ''),
                 'confirmed_summary': request.form.get('confirmed_summary', ''),
-                'confirmed_deliverables': json.loads(request.form.get('confirmed_deliverables', '[]')),
-                'confirmed_technical_skills': json.loads(request.form.get('confirmed_technical_skills', '[]')),
-                'confirmed_professional_skills': json.loads(request.form.get('confirmed_professional_skills', '[]')),
-                'confirmed_domain_knowledge': json.loads(request.form.get('confirmed_domain_knowledge', '[]')),
-                'confirmed_success_criteria': json.loads(request.form.get('confirmed_success_criteria', '[]')),
+                'confirmed_deliverables': safe_json_loads(request.form.get('confirmed_deliverables', '[]')),
+                'confirmed_technical_skills': safe_json_loads(request.form.get('confirmed_technical_skills', '[]')),
+                'confirmed_professional_skills': safe_json_loads(request.form.get('confirmed_professional_skills', '[]')),
+                'confirmed_domain_knowledge': safe_json_loads(request.form.get('confirmed_domain_knowledge', '[]')),
+                'confirmed_success_criteria': safe_json_loads(request.form.get('confirmed_success_criteria', '[]')),
                 'mentorship_level': request.form.get('mentorship_level', ''),
                 'team_size': request.form.get('team_size', '')
             },
             'gaps': {
-                'strong_matches': json.loads(request.form.get('strong_matches', '[]')),
-                'skill_gaps': json.loads(request.form.get('skill_gaps', '[]')),
+                'strong_matches': safe_json_loads(request.form.get('strong_matches', '[]')),
+                'skill_gaps': safe_json_loads(request.form.get('skill_gaps', '[]')),
                 'scaffolding_recommendation': request.form.get('scaffolding_recommendation', 'moderate'),
                 'overall_fit': request.form.get('overall_fit', 'good')
             },
