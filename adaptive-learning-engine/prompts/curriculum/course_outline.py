@@ -41,84 +41,53 @@ def build_course_outline_prompt(confirmed_data: dict, objectives: dict) -> str:
 
     prompt = f"""You are an expert instructional designer specializing in experiential learning curriculum.
 
-Your task is to generate a high-level course outline with week themes, milestones, and deliverable scheduling.
-
-{learner_context}
+Generate a high-level course outline (syllabus-style) for a {term_length}-week experiential learning course.
 
 {project_context}
 
 {institution_context}
 
-{objectives_context}
-
-## PROJECT DELIVERABLES TO SCHEDULE
+## PROJECT DELIVERABLES
 {deliverables_text}
-
-## SCAFFOLDING RECOMMENDATION
-Based on the learner-project fit analysis: {scaffolding}
-- "minimal": Learner is well-prepared, can work more independently
-- "moderate": Some guidance needed, balanced support
-- "significant": More structure and check-ins needed
 
 ## TASK
 
-Generate a course outline as JSON. Your response must be ONLY valid JSON, no other text.
+Generate a simple course outline as JSON. Your response must be ONLY valid JSON, no other text.
 
 ### Course Header
-Create a compelling course title and 2-3 paragraph description that:
-- Reflects the specific project and learning context
-- Highlights experiential learning approach
-- Appeals to both academic and professional audiences
+- A course title reflecting the project
+- Credit hours: {institution.get('credit_hours', '3')}
+- A 1-2 sentence course description
 
 ### Weekly Structure
-Generate an outline for ALL {term_length} weeks with:
+For each of the {term_length} weeks, provide ONLY:
+- Week number
+- Theme (3-6 words summarizing the focus)
+- Milestone (brief checkpoint, optional for some weeks)
 
-**Pacing Guidelines:**
-- Weeks 1-2: Onboarding, context-setting, initial planning, relationship building
-- Weeks 3 to {int(term_length)-2}: Core project execution cycles
-- Week {int(term_length)-1}: Synthesis, final deliverable preparation
-- Week {term_length}: Presentation, final reflection, wrap-up
-
-**For Each Week Include:**
-- A clear theme (3-6 words)
-- A milestone or checkpoint
-- Any deliverables due that week (distribute project deliverables appropriately)
-
-**Deliverable Distribution:**
-- Schedule smaller/draft deliverables in middle weeks
-- Reserve final deliverables for weeks {int(term_length)-1}-{term_length}
-- Include reflection submissions each week
+**Pacing:**
+- Weeks 1-2: Onboarding and planning
+- Middle weeks: Core project work
+- Final weeks: Synthesis and presentation
 
 ## OUTPUT FORMAT
 
-Return ONLY this JSON structure:
+Return ONLY this JSON:
 
 ```json
 {{
   "course_header": {{
-    "title": "EXP 495: [Project-Specific Title]",
+    "title": "EXP 495: [Title]",
     "credits": "{institution.get('credit_hours', '3')}",
-    "description": "This experiential learning course..."
+    "description": "Brief course description."
   }},
   "weeks": [
-    {{
-      "week": 1,
-      "theme": "Onboarding & Context Setting",
-      "milestone": "Project kickoff meeting completed",
-      "deliverables": ["Learning contract draft"],
-      "key_activities": ["Meet with mentor", "Review project scope", "Set communication expectations"]
-    }},
-    {{
-      "week": 2,
-      "theme": "Initial Planning & Goal Setting",
-      "milestone": "Project plan approved",
-      "deliverables": ["Project plan", "Weekly reflection #1"],
-      "key_activities": ["Develop timeline", "Identify resources needed", "Establish success metrics"]
-    }}
+    {{"week": 1, "theme": "Onboarding & Orientation", "milestone": "Project kickoff complete"}},
+    {{"week": 2, "theme": "Planning & Goal Setting", "milestone": "Project plan submitted"}}
   ]
 }}
 ```
 
-Generate entries for ALL {term_length} weeks following the pacing guidelines above."""
+Generate all {term_length} weeks. Keep it concise - this is a syllabus overview, not detailed lesson plans."""
 
     return prompt

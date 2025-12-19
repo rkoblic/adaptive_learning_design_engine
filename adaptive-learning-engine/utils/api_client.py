@@ -293,7 +293,7 @@ class ClaudeClient:
                     "credits": confirmed_data.get('institution', {}).get('credit_hours', '3'),
                     "description": "Course outline generation failed. Please try again."
                 },
-                "weeks": [{"week": i, "theme": f"Week {i}", "milestone": "", "deliverables": []} for i in range(1, term_length + 1)],
+                "weeks": [{"week": i, "theme": f"Week {i}", "milestone": ""} for i in range(1, term_length + 1)],
                 "parse_error": str(e)
             }
 

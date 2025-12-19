@@ -27,7 +27,7 @@ class Config:
 
     # Modular curriculum generation token limits
     OBJECTIVES_ASSESSMENT_MAX_TOKENS = 2000  # Step 1: Objectives + assessment strategy
-    COURSE_OUTLINE_MAX_TOKENS = 4000         # Step 2: High-level outline (14 weeks needs ~3000+ tokens)
+    COURSE_OUTLINE_MAX_TOKENS = 2000         # Step 2: High-level syllabus outline
     WEEK_DETAIL_MAX_TOKENS = 800             # Step 3: Detailed week content (per week)
 
     # File upload settings
