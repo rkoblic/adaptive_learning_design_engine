@@ -23,7 +23,12 @@ class Config:
     # Token limits
     EXTRACTION_MAX_TOKENS = 2000
     GAP_ANALYSIS_MAX_TOKENS = 3000  # Increased for Bloom's taxonomy learning objectives
-    CURRICULUM_MAX_TOKENS = 8000
+    CURRICULUM_MAX_TOKENS = 8000  # Legacy: monolithic curriculum generation
+
+    # Modular curriculum generation token limits
+    OBJECTIVES_ASSESSMENT_MAX_TOKENS = 2000  # Step 1: Objectives + assessment strategy
+    COURSE_OUTLINE_MAX_TOKENS = 1500         # Step 2: High-level outline
+    WEEK_DETAIL_MAX_TOKENS = 800             # Step 3: Detailed week content (per week)
 
     # File upload settings
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB max file size

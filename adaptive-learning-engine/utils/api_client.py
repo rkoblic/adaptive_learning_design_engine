@@ -11,7 +11,11 @@ from prompts import (
     build_resume_extraction_prompt,
     build_project_extraction_prompt,
     build_gap_analysis_prompt,
-    build_curriculum_prompt
+    build_curriculum_prompt,
+    # Modular curriculum prompts
+    build_objectives_and_assessment_prompt,
+    build_course_outline_prompt,
+    build_week_detail_prompt,
 )
 
 
@@ -221,3 +225,141 @@ class ClaudeClient:
         )
 
         return response_text
+
+    # --- Modular Curriculum Generation Methods ---
+
+    def generate_objectives_and_assessment(self, confirmed_data: dict) -> dict:
+        """
+        Step 1: Generate learning objectives and assessment strategy.
+
+        Args:
+            confirmed_data: Dict with learner, project, gaps, and institution data
+
+        Returns:
+            Dict with fixed_objectives, variable_objectives, and assessment_strategy
+        """
+        prompt = build_objectives_and_assessment_prompt(confirmed_data)
+
+        response_text = self._call_with_retry(
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=Config.OBJECTIVES_ASSESSMENT_MAX_TOKENS
+        )
+
+        json_str = self._extract_json_from_response(response_text)
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError as e:
+            print(f"Objectives/assessment JSON parse error: {e}")
+            return {
+                "fixed_objectives": [],
+                "variable_objectives": [],
+                "assessment_strategy": {
+                    "grading_scale": "Letter Grade (A-F)",
+                    "grading_breakdown": {},
+                    "deliverable_rubric_criteria": [],
+                    "reflection_rubric_criteria": [],
+                    "employer_evaluation_dimensions": []
+                },
+                "parse_error": str(e)
+            }
+
+    def generate_course_outline(self, confirmed_data: dict, objectives: dict) -> dict:
+        """
+        Step 2: Generate high-level course outline.
+
+        Args:
+            confirmed_data: Dict with learner, project, gaps, and institution data
+            objectives: Finalized objectives from Step 1
+
+        Returns:
+            Dict with course_header and weeks array
+        """
+        prompt = build_course_outline_prompt(confirmed_data, objectives)
+
+        response_text = self._call_with_retry(
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=Config.COURSE_OUTLINE_MAX_TOKENS
+        )
+
+        json_str = self._extract_json_from_response(response_text)
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError as e:
+            print(f"Course outline JSON parse error: {e}")
+            term_length = int(confirmed_data.get('institution', {}).get('term_length_weeks', 14))
+            return {
+                "course_header": {
+                    "title": "Experiential Learning Course",
+                    "credits": confirmed_data.get('institution', {}).get('credit_hours', '3'),
+                    "description": "Course outline generation failed. Please try again."
+                },
+                "weeks": [{"week": i, "theme": f"Week {i}", "milestone": "", "deliverables": []} for i in range(1, term_length + 1)],
+                "parse_error": str(e)
+            }
+
+    def generate_week_detail(
+        self,
+        confirmed_data: dict,
+        objectives: dict,
+        outline: dict,
+        week_num: int,
+        feedback: str = None
+    ) -> str:
+        """
+        Step 3: Generate detailed content for a single week.
+
+        Args:
+            confirmed_data: Dict with learner, project, gaps, and institution data
+            objectives: Finalized objectives from Step 1
+            outline: Course outline from Step 2
+            week_num: Which week to generate (1-indexed)
+            feedback: Optional user feedback for regeneration
+
+        Returns:
+            Markdown string with Kolb cycle and DEAL reflection
+        """
+        prompt = build_week_detail_prompt(
+            confirmed_data,
+            objectives,
+            outline,
+            week_num,
+            feedback
+        )
+
+        response_text = self._call_with_retry(
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=Config.WEEK_DETAIL_MAX_TOKENS
+        )
+
+        return response_text
+
+    def regenerate_week(
+        self,
+        confirmed_data: dict,
+        objectives: dict,
+        outline: dict,
+        week_num: int,
+        feedback: str = None
+    ) -> str:
+        """
+        Regenerate a specific week with optional user feedback.
+
+        This is a convenience wrapper around generate_week_detail.
+
+        Args:
+            confirmed_data: Dict with learner, project, gaps, and institution data
+            objectives: Finalized objectives from Step 1
+            outline: Course outline from Step 2
+            week_num: Which week to regenerate (1-indexed)
+            feedback: Optional user feedback guiding regeneration
+
+        Returns:
+            Markdown string with regenerated Kolb cycle and DEAL reflection
+        """
+        return self.generate_week_detail(
+            confirmed_data,
+            objectives,
+            outline,
+            week_num,
+            feedback
+        )

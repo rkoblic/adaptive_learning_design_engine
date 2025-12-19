@@ -1,0 +1,587 @@
+{% extends "base.html" %}
+
+{% block title %}Build Course - Adaptive Learning Design Engine{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Progress Header -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Build Your Course</h2>
+
+        <!-- Step Indicator -->
+        <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center flex-1">
+                <div id="step1-indicator" class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">1</div>
+                    <span class="ml-2 font-medium text-primary">Objectives</span>
+                </div>
+                <div class="flex-1 h-1 mx-4 bg-gray-200" id="step1-connector">
+                    <div class="h-full bg-primary transition-all duration-500" style="width: 0%" id="step1-progress"></div>
+                </div>
+            </div>
+            <div class="flex items-center flex-1">
+                <div id="step2-indicator" class="flex items-center opacity-50">
+                    <div class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold">2</div>
+                    <span class="ml-2 font-medium text-gray-500">Outline</span>
+                </div>
+                <div class="flex-1 h-1 mx-4 bg-gray-200" id="step2-connector">
+                    <div class="h-full bg-primary transition-all duration-500" style="width: 0%" id="step2-progress"></div>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <div id="step3-indicator" class="flex items-center opacity-50">
+                    <div class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold">3</div>
+                    <span class="ml-2 font-medium text-gray-500">Week Details</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-sm text-gray-600 mt-4">
+            Course: <strong>{{ data.project.project_title }}</strong> for <strong>{{ data.learner.learner_name }}</strong>
+        </p>
+    </div>
+
+    <!-- Step 1: Objectives & Assessment -->
+    <div id="step1-section" class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Step 1: Learning Objectives & Assessment Strategy</h3>
+                <span id="step1-status" class="px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800">Ready</span>
+            </div>
+        </div>
+        <div class="p-6">
+            <!-- Loading State -->
+            <div id="step1-loading" class="hidden">
+                <div class="flex items-center justify-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <span class="ml-4 text-gray-600">Generating objectives and assessment strategy...</span>
+                </div>
+            </div>
+
+            <!-- Initial State -->
+            <div id="step1-initial">
+                <p class="text-gray-600 mb-4">Generate learning objectives based on the learner profile and skill gaps, plus an assessment strategy.</p>
+                <button onclick="generateStep1()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                    Generate Objectives
+                </button>
+            </div>
+
+            <!-- Content State -->
+            <div id="step1-content" class="hidden space-y-6">
+                <!-- Fixed Objectives -->
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-2">Professional Skills Objectives</h4>
+                    <div id="fixed-objectives-list" class="space-y-2"></div>
+                </div>
+
+                <!-- Variable Objectives -->
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-2">Project-Specific Objectives</h4>
+                    <div id="variable-objectives-list" class="space-y-2"></div>
+                </div>
+
+                <!-- Assessment Strategy -->
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-2">Assessment Strategy</h4>
+                    <div id="assessment-strategy" class="bg-gray-50 rounded-lg p-4"></div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <button onclick="regenerateStep1()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Regenerate
+                    </button>
+                    <button onclick="confirmStep1()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                        Continue to Outline
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Course Outline -->
+    <div id="step2-section" class="bg-white rounded-lg shadow-sm border border-gray-200 opacity-50 pointer-events-none">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Step 2: Course Outline</h3>
+                <span id="step2-status" class="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-600">Waiting</span>
+            </div>
+        </div>
+        <div class="p-6">
+            <!-- Loading State -->
+            <div id="step2-loading" class="hidden">
+                <div class="flex items-center justify-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <span class="ml-4 text-gray-600">Generating course outline...</span>
+                </div>
+            </div>
+
+            <!-- Initial State -->
+            <div id="step2-initial">
+                <p class="text-gray-600">Complete Step 1 to generate the course outline.</p>
+            </div>
+
+            <!-- Content State -->
+            <div id="step2-content" class="hidden space-y-6">
+                <!-- Course Header -->
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-2">Course Information</h4>
+                    <div id="course-header" class="bg-gray-50 rounded-lg p-4"></div>
+                </div>
+
+                <!-- Week Outline -->
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-2">Weekly Structure</h4>
+                    <div id="weeks-outline" class="space-y-2"></div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <button onclick="regenerateStep2()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Regenerate
+                    </button>
+                    <button onclick="confirmStep2()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                        Continue to Week Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Week Details -->
+    <div id="step3-section" class="bg-white rounded-lg shadow-sm border border-gray-200 opacity-50 pointer-events-none">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Step 3: Week Details</h3>
+                <span id="step3-status" class="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-600">Waiting</span>
+            </div>
+        </div>
+        <div class="p-6">
+            <!-- Loading State -->
+            <div id="step3-loading" class="hidden">
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                    <span class="mt-4 text-gray-600">Generating week details...</span>
+                    <div class="mt-2 text-sm text-gray-500">Week <span id="current-week-generating">1</span> of {{ data.institution.term_length_weeks }}</div>
+                </div>
+            </div>
+
+            <!-- Initial State -->
+            <div id="step3-initial">
+                <p class="text-gray-600">Complete Step 2 to generate detailed week content.</p>
+            </div>
+
+            <!-- Content State -->
+            <div id="step3-content" class="hidden space-y-4">
+                <!-- Week Tabs/Accordion -->
+                <div id="weeks-container" class="space-y-3"></div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                    <button onclick="generateAllWeeks()" id="generate-all-weeks-btn" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Generate All Weeks
+                    </button>
+                    <form action="{{ url_for('finalize_curriculum') }}" method="POST">
+                        <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                            Finalize Course
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="flex justify-start">
+        <a href="{{ url_for('back_to_confirm') }}" class="text-gray-600 hover:text-gray-900">
+            &larr; Back to Review
+        </a>
+    </div>
+</div>
+
+<!-- Regenerate Modal -->
+<div id="regenerate-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Regenerate Week <span id="regenerate-week-num"></span></h3>
+        <p class="text-gray-600 mb-4">Optionally provide feedback to guide the regeneration:</p>
+        <textarea id="regenerate-feedback" rows="3" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-primary focus:border-primary" placeholder="e.g., Make the reflection prompts more specific to data analysis..."></textarea>
+        <div class="flex justify-end space-x-3 mt-4">
+            <button onclick="closeRegenerateModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                Cancel
+            </button>
+            <button onclick="submitRegenerate()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                Regenerate
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Build state
+    const termLength = {{ data.institution.term_length_weeks | int }};
+    let buildState = {
+        step: 1,
+        objectives: {{ build_state.objectives | tojson if build_state.objectives else 'null' }},
+        assessment: {{ build_state.assessment_strategy | tojson if build_state.assessment_strategy else 'null' }},
+        outline: {{ build_state.outline | tojson if build_state.outline else 'null' }},
+        weekDetails: {{ build_state.week_details | tojson if build_state.week_details else '{}' }}
+    };
+    let regeneratingWeek = null;
+
+    // Initialize based on existing state
+    document.addEventListener('DOMContentLoaded', function() {
+        if (buildState.objectives) {
+            renderStep1Content();
+            document.getElementById('step1-initial').classList.add('hidden');
+            document.getElementById('step1-content').classList.remove('hidden');
+            document.getElementById('step1-status').textContent = 'Complete';
+            document.getElementById('step1-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800';
+        }
+        if (buildState.outline) {
+            enableStep2();
+            renderStep2Content();
+            document.getElementById('step2-initial').classList.add('hidden');
+            document.getElementById('step2-content').classList.remove('hidden');
+            document.getElementById('step2-status').textContent = 'Complete';
+            document.getElementById('step2-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800';
+        }
+        if (Object.keys(buildState.weekDetails).length > 0) {
+            enableStep3();
+            renderStep3Content();
+        }
+    });
+
+    // Step 1: Generate Objectives
+    async function generateStep1() {
+        document.getElementById('step1-initial').classList.add('hidden');
+        document.getElementById('step1-loading').classList.remove('hidden');
+        document.getElementById('step1-status').textContent = 'Generating...';
+        document.getElementById('step1-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-800';
+
+        try {
+            const response = await fetch('/api/generate-objectives', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.error) {
+                alert('Error: ' + data.error);
+                document.getElementById('step1-loading').classList.add('hidden');
+                document.getElementById('step1-initial').classList.remove('hidden');
+                document.getElementById('step1-status').textContent = 'Error';
+                document.getElementById('step1-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-red-100 text-red-800';
+                return;
+            }
+
+            buildState.objectives = data.objectives;
+            buildState.assessment = data.assessment_strategy;
+
+            renderStep1Content();
+            document.getElementById('step1-loading').classList.add('hidden');
+            document.getElementById('step1-content').classList.remove('hidden');
+            document.getElementById('step1-status').textContent = 'Review';
+            document.getElementById('step1-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800';
+            document.getElementById('step1-progress').style.width = '100%';
+        } catch (error) {
+            alert('Error generating objectives: ' + error.message);
+            document.getElementById('step1-loading').classList.add('hidden');
+            document.getElementById('step1-initial').classList.remove('hidden');
+        }
+    }
+
+    function renderStep1Content() {
+        // Fixed objectives
+        const fixedList = document.getElementById('fixed-objectives-list');
+        fixedList.innerHTML = '';
+        (buildState.objectives.fixed_objectives || []).forEach(obj => {
+            const text = typeof obj === 'string' ? obj : obj.text;
+            const div = document.createElement('div');
+            div.className = 'p-3 bg-gray-50 rounded-lg text-gray-700';
+            div.textContent = text;
+            fixedList.appendChild(div);
+        });
+
+        // Variable objectives
+        const varList = document.getElementById('variable-objectives-list');
+        varList.innerHTML = '';
+        (buildState.objectives.variable_objectives || []).forEach(obj => {
+            const text = typeof obj === 'string' ? obj : obj.text;
+            const bloom = typeof obj === 'object' ? obj.bloom_level : '';
+            const div = document.createElement('div');
+            div.className = 'p-3 bg-gray-50 rounded-lg text-gray-700';
+            div.innerHTML = `${text} ${bloom ? `<span class="text-sm text-primary">(${bloom})</span>` : ''}`;
+            varList.appendChild(div);
+        });
+
+        // Assessment strategy
+        const assessmentDiv = document.getElementById('assessment-strategy');
+        const grading = buildState.assessment?.grading_breakdown || {};
+        let gradingHtml = '<div class="space-y-2">';
+        for (const [key, value] of Object.entries(grading)) {
+            const label = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            const weight = typeof value === 'object' ? value.weight : value;
+            const desc = typeof value === 'object' ? value.description : '';
+            gradingHtml += `<div class="flex justify-between"><span class="font-medium">${label}</span><span>${weight}%</span></div>`;
+        }
+        gradingHtml += '</div>';
+        assessmentDiv.innerHTML = gradingHtml;
+    }
+
+    async function regenerateStep1() {
+        document.getElementById('step1-content').classList.add('hidden');
+        await generateStep1();
+    }
+
+    function confirmStep1() {
+        document.getElementById('step1-status').textContent = 'Complete';
+        document.getElementById('step1-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800';
+        enableStep2();
+        generateStep2();
+    }
+
+    // Step 2: Generate Outline
+    function enableStep2() {
+        const section = document.getElementById('step2-section');
+        section.classList.remove('opacity-50', 'pointer-events-none');
+        document.getElementById('step2-indicator').classList.remove('opacity-50');
+        document.getElementById('step2-indicator').querySelector('div').className = 'w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold';
+        document.getElementById('step2-indicator').querySelector('span').className = 'ml-2 font-medium text-primary';
+    }
+
+    async function generateStep2() {
+        document.getElementById('step2-initial').classList.add('hidden');
+        document.getElementById('step2-loading').classList.remove('hidden');
+        document.getElementById('step2-status').textContent = 'Generating...';
+        document.getElementById('step2-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-800';
+
+        try {
+            const response = await fetch('/api/generate-outline', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.error) {
+                alert('Error: ' + data.error);
+                document.getElementById('step2-loading').classList.add('hidden');
+                document.getElementById('step2-initial').classList.remove('hidden');
+                return;
+            }
+
+            buildState.outline = data.outline;
+
+            renderStep2Content();
+            document.getElementById('step2-loading').classList.add('hidden');
+            document.getElementById('step2-content').classList.remove('hidden');
+            document.getElementById('step2-status').textContent = 'Review';
+            document.getElementById('step2-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800';
+            document.getElementById('step2-progress').style.width = '100%';
+        } catch (error) {
+            alert('Error generating outline: ' + error.message);
+            document.getElementById('step2-loading').classList.add('hidden');
+            document.getElementById('step2-initial').classList.remove('hidden');
+        }
+    }
+
+    function renderStep2Content() {
+        // Course header
+        const header = buildState.outline?.course_header || {};
+        const headerDiv = document.getElementById('course-header');
+        headerDiv.innerHTML = `
+            <div class="space-y-2">
+                <div><strong class="text-gray-900">Title:</strong> ${header.title || 'TBD'}</div>
+                <div><strong class="text-gray-900">Credits:</strong> ${header.credits || '3'}</div>
+                <div><strong class="text-gray-900">Description:</strong> ${header.description || 'TBD'}</div>
+            </div>
+        `;
+
+        // Weeks outline
+        const weeksDiv = document.getElementById('weeks-outline');
+        weeksDiv.innerHTML = '';
+        (buildState.outline?.weeks || []).forEach(week => {
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+            div.innerHTML = `
+                <div>
+                    <span class="font-medium text-gray-900">Week ${week.week}:</span>
+                    <span class="text-gray-700">${week.theme}</span>
+                </div>
+                <div class="text-sm text-gray-500">${week.milestone || ''}</div>
+            `;
+            weeksDiv.appendChild(div);
+        });
+    }
+
+    async function regenerateStep2() {
+        document.getElementById('step2-content').classList.add('hidden');
+        await generateStep2();
+    }
+
+    function confirmStep2() {
+        document.getElementById('step2-status').textContent = 'Complete';
+        document.getElementById('step2-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800';
+        enableStep3();
+        renderStep3Content();
+    }
+
+    // Step 3: Week Details
+    function enableStep3() {
+        const section = document.getElementById('step3-section');
+        section.classList.remove('opacity-50', 'pointer-events-none');
+        document.getElementById('step3-indicator').classList.remove('opacity-50');
+        document.getElementById('step3-indicator').querySelector('div').className = 'w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold';
+        document.getElementById('step3-indicator').querySelector('span').className = 'ml-2 font-medium text-primary';
+        document.getElementById('step3-initial').classList.add('hidden');
+        document.getElementById('step3-content').classList.remove('hidden');
+        document.getElementById('step3-status').textContent = 'In Progress';
+        document.getElementById('step3-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800';
+    }
+
+    function renderStep3Content() {
+        const container = document.getElementById('weeks-container');
+        container.innerHTML = '';
+
+        const weeks = buildState.outline?.weeks || [];
+        weeks.forEach(week => {
+            const weekNum = week.week;
+            const hasContent = buildState.weekDetails[weekNum];
+
+            const div = document.createElement('div');
+            div.className = 'border border-gray-200 rounded-lg overflow-hidden';
+            div.id = `week-${weekNum}-card`;
+
+            div.innerHTML = `
+                <div class="flex items-center justify-between p-4 bg-gray-50 cursor-pointer" onclick="toggleWeek(${weekNum})">
+                    <div class="flex items-center space-x-3">
+                        <span id="week-${weekNum}-status" class="w-6 h-6 rounded-full flex items-center justify-center text-sm ${hasContent ? 'bg-green-100 text-green-600' : 'bg-gray-200 text-gray-500'}">
+                            ${hasContent ? '✓' : weekNum}
+                        </span>
+                        <span class="font-medium text-gray-900">Week ${weekNum}: ${week.theme}</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        ${!hasContent ? `<button onclick="event.stopPropagation(); generateWeek(${weekNum})" class="px-3 py-1 text-sm bg-primary text-white rounded hover:bg-primary/90">Generate</button>` : ''}
+                        ${hasContent ? `<button onclick="event.stopPropagation(); openRegenerateModal(${weekNum})" class="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100">Regenerate</button>` : ''}
+                        <svg class="w-5 h-5 text-gray-400 transform transition-transform" id="week-${weekNum}-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div id="week-${weekNum}-content" class="hidden p-4 border-t border-gray-200">
+                    ${hasContent ? `<div class="prose prose-sm max-w-none">${buildState.weekDetails[weekNum]}</div>` : '<p class="text-gray-500">Content not yet generated</p>'}
+                </div>
+            `;
+
+            container.appendChild(div);
+        });
+    }
+
+    function toggleWeek(weekNum) {
+        const content = document.getElementById(`week-${weekNum}-content`);
+        const arrow = document.getElementById(`week-${weekNum}-arrow`);
+        content.classList.toggle('hidden');
+        arrow.classList.toggle('rotate-180');
+    }
+
+    async function generateWeek(weekNum) {
+        document.getElementById('current-week-generating').textContent = weekNum;
+        const statusSpan = document.getElementById(`week-${weekNum}-status`);
+        statusSpan.innerHTML = '<div class="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>';
+
+        try {
+            const response = await fetch(`/api/generate-week/${weekNum}`, { method: 'POST' });
+            const data = await response.json();
+
+            if (data.error) {
+                alert('Error: ' + data.error);
+                statusSpan.innerHTML = weekNum;
+                return;
+            }
+
+            buildState.weekDetails[weekNum] = data.content;
+            statusSpan.innerHTML = '✓';
+            statusSpan.className = 'w-6 h-6 rounded-full flex items-center justify-center text-sm bg-green-100 text-green-600';
+
+            // Update content
+            const contentDiv = document.getElementById(`week-${weekNum}-content`);
+            contentDiv.innerHTML = `<div class="prose prose-sm max-w-none">${data.html}</div>`;
+
+            // Update card to show regenerate button instead of generate
+            renderStep3Content();
+
+        } catch (error) {
+            alert('Error generating week: ' + error.message);
+            statusSpan.innerHTML = weekNum;
+        }
+    }
+
+    async function generateAllWeeks() {
+        const btn = document.getElementById('generate-all-weeks-btn');
+        btn.disabled = true;
+        btn.textContent = 'Generating...';
+
+        document.getElementById('step3-loading').classList.remove('hidden');
+
+        const weeks = buildState.outline?.weeks || [];
+        for (const week of weeks) {
+            if (!buildState.weekDetails[week.week]) {
+                document.getElementById('current-week-generating').textContent = week.week;
+                await generateWeek(week.week);
+            }
+        }
+
+        document.getElementById('step3-loading').classList.add('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Generate All Weeks';
+        document.getElementById('step3-status').textContent = 'Complete';
+        document.getElementById('step3-status').className = 'px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800';
+    }
+
+    // Regenerate modal
+    function openRegenerateModal(weekNum) {
+        regeneratingWeek = weekNum;
+        document.getElementById('regenerate-week-num').textContent = weekNum;
+        document.getElementById('regenerate-feedback').value = '';
+        document.getElementById('regenerate-modal').classList.remove('hidden');
+        document.getElementById('regenerate-modal').classList.add('flex');
+    }
+
+    function closeRegenerateModal() {
+        document.getElementById('regenerate-modal').classList.add('hidden');
+        document.getElementById('regenerate-modal').classList.remove('flex');
+        regeneratingWeek = null;
+    }
+
+    async function submitRegenerate() {
+        if (!regeneratingWeek) return;
+
+        const feedback = document.getElementById('regenerate-feedback').value;
+        closeRegenerateModal();
+
+        const statusSpan = document.getElementById(`week-${regeneratingWeek}-status`);
+        statusSpan.innerHTML = '<div class="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>';
+
+        try {
+            const response = await fetch(`/api/regenerate-week/${regeneratingWeek}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ feedback })
+            });
+            const data = await response.json();
+
+            if (data.error) {
+                alert('Error: ' + data.error);
+                statusSpan.innerHTML = '✓';
+                return;
+            }
+
+            buildState.weekDetails[regeneratingWeek] = data.content;
+            statusSpan.innerHTML = '✓';
+
+            // Update content
+            const contentDiv = document.getElementById(`week-${regeneratingWeek}-content`);
+            contentDiv.innerHTML = `<div class="prose prose-sm max-w-none">${data.html}</div>`;
+
+        } catch (error) {
+            alert('Error regenerating week: ' + error.message);
+            statusSpan.innerHTML = '✓';
+        }
+    }
+</script>
+{% endblock %}
