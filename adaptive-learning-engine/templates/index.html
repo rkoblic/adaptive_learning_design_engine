@@ -25,8 +25,40 @@
     </div>
 
     <form action="{{ url_for('extract_and_confirm') }}" method="POST" enctype="multipart/form-data" id="intakeForm">
-        <!-- Expand/Collapse All -->
-        <div class="flex justify-end mb-4">
+        <!-- Demo Scenarios & Expand/Collapse -->
+        <div class="flex justify-between items-center mb-4">
+            <!-- Demo Scenario Dropdown -->
+            <div class="relative">
+                <button type="button" id="demoBtn" onclick="toggleDemoDropdown()" class="px-4 py-2 bg-amber-100 text-amber-800 rounded-lg text-sm font-medium hover:bg-amber-200 transition-colors flex items-center">
+                    <span class="mr-2">🎭</span>
+                    Load Demo Scenario
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="demoDropdown" class="hidden absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div class="py-2">
+                        <button type="button" onclick="loadScenario('marketing')" class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                            <span class="font-medium">Marketing + Solar Campaign</span>
+                            <span class="block text-xs text-gray-500">Junior, GreenTech Solutions</span>
+                        </button>
+                        <button type="button" onclick="loadScenario('tech')" class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                            <span class="font-medium">CS + Tech Startup</span>
+                            <span class="block text-xs text-gray-500">Senior, PayFlow Technologies</span>
+                        </button>
+                        <button type="button" onclick="loadScenario('health')" class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                            <span class="font-medium">Public Health + Nonprofit</span>
+                            <span class="block text-xs text-gray-500">Graduate, Health Coalition</span>
+                        </button>
+                        <button type="button" onclick="loadScenario('finance')" class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">
+                            <span class="font-medium">Finance + Investment Firm</span>
+                            <span class="block text-xs text-gray-500">Junior, Meridian Capital</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expand All Button -->
             <button type="button" id="expandAllBtn" onclick="toggleAllSections()" class="text-sm text-primary hover:underline flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
@@ -49,9 +81,12 @@
                         <p class="text-sm text-gray-500">Student information and resume</p>
                     </div>
                 </div>
-                <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+                <div class="flex items-center">
+                    <button type="button" onclick="event.stopPropagation(); loadSectionSample('learner')" class="text-xs text-gray-400 hover:text-primary mr-3">(use sample)</button>
+                    <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
             </button>
             <div class="px-6 pb-6 section-content hidden" id="learner-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -150,9 +185,12 @@
                         <p class="text-sm text-gray-500">Project details and company information</p>
                     </div>
                 </div>
-                <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+                <div class="flex items-center">
+                    <button type="button" onclick="event.stopPropagation(); loadSectionSample('project')" class="text-xs text-gray-400 hover:text-primary mr-3">(use sample)</button>
+                    <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
             </button>
             <div class="px-6 pb-6 section-content hidden" id="project-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -258,9 +296,12 @@
                         <p class="text-sm text-gray-500">Course structure and grading requirements</p>
                     </div>
                 </div>
-                <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+                <div class="flex items-center">
+                    <button type="button" onclick="event.stopPropagation(); loadSectionSample('institution')" class="text-xs text-gray-400 hover:text-primary mr-3">(use sample)</button>
+                    <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
             </button>
             <div class="px-6 pb-6 section-content hidden" id="institution-section">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -330,6 +371,445 @@
 
 {% block scripts %}
 <script>
+    // Demo Scenarios Data
+    const demoScenarios = {
+        marketing: {
+            learner: {
+                name: "Jordan Smith",
+                academic_level: "Junior",
+                major: "Marketing",
+                resume_text: `JORDAN SMITH
+Marketing Major | State University | Class of 2025
+jordan.smith@email.com | (555) 123-4567
+
+EDUCATION
+State University, Bachelor of Science in Marketing
+Expected Graduation: May 2025 | GPA: 3.4
+
+Relevant Coursework: Consumer Behavior, Marketing Research, Digital Marketing Fundamentals, Business Statistics, Brand Management
+
+EXPERIENCE
+
+Marketing Intern | Local Nonprofit Organization | Summer 2024
+- Managed organization's Instagram and Facebook accounts, growing followers by 25%
+- Created weekly social media content including graphics using Canva
+- Assisted with email newsletter campaigns using Mailchimp
+- Conducted basic analytics reporting on social media performance
+
+Student Marketing Assistant | University Admissions Office | 2023-Present
+- Create promotional materials for campus events
+- Write copy for student recruitment emails
+- Coordinate campus tour social media takeovers
+
+SKILLS
+Social Media: Instagram, Facebook, LinkedIn, TikTok
+Design: Canva, basic Adobe Photoshop
+Tools: Microsoft Office, Google Workspace, Mailchimp
+Languages: English (native), Spanish (conversational)
+
+ACTIVITIES
+- Marketing Club, Member
+- Volunteer, Local Food Bank`,
+                career_goals: "I'm interested in pursuing a career in digital marketing or brand management. I'd love to work for a company focused on sustainability or social impact.",
+                skills_to_develop: "I want to improve my data analytics skills, learn Google Analytics, and gain experience developing marketing strategies from scratch.",
+                learning_preferences: ["Visual", "Collaborative"]
+            },
+            project: {
+                company: "GreenTech Solutions",
+                industry: "Energy/Sustainability",
+                title: "Customer Acquisition Campaign Development",
+                narrative: `We're looking for a student to help us develop and execute a digital marketing campaign for our new residential solar panel financing product. GreenTech Solutions is a growing renewable energy company, and we're trying to reach homeowners who are interested in solar but worried about upfront costs.
+
+The student would start by researching our target customers - we think they're probably homeowners aged 35-55 in suburban areas who care about the environment but are also practical about finances. We'd love for them to create detailed customer personas based on research.
+
+Then they'd develop a campaign strategy - which channels make sense (we're thinking social media and maybe some content marketing), what messaging would resonate, and how we'd measure success. We want to see an actual content calendar they create and ideally have them execute at least part of the campaign during their time with us.
+
+We'd also like them to set up some kind of tracking dashboard so we can see how things are performing - leads generated, engagement rates, that kind of thing. They'll need to learn Google Analytics if they don't know it already.
+
+At the end, we'd want them to present their results to our marketing team with recommendations for what we should do next.`,
+                mentorship: "Medium",
+                team_size: "Individual"
+            },
+            institution: {
+                credits: 3,
+                weeks: 14,
+                hours: 9,
+                name: "State University",
+                grading: "Letter Grade (A-F)",
+                frameworks: ["NACE Career Readiness"]
+            }
+        },
+        tech: {
+            learner: {
+                name: "Alex Chen",
+                academic_level: "Senior",
+                major: "Computer Science",
+                resume_text: `ALEX CHEN
+Computer Science | Tech Institute | Class of 2025
+alex.chen@email.com | github.com/alexchen | (555) 234-5678
+
+EDUCATION
+Tech Institute, Bachelor of Science in Computer Science
+Expected Graduation: May 2025 | GPA: 3.7
+
+Relevant Coursework: Data Structures, Algorithms, Database Systems, Software Engineering, Mobile App Development, Web Development, Machine Learning
+
+EXPERIENCE
+
+Software Engineering Intern | TechCorp Inc. | Summer 2024
+- Developed RESTful APIs using Python/Flask serving 10K+ daily requests
+- Built React components for customer-facing dashboard
+- Participated in code reviews and Agile sprint ceremonies
+- Wrote unit tests achieving 85% code coverage
+
+Teaching Assistant | Tech Institute CS Department | 2023-Present
+- Lead weekly lab sessions for Introduction to Programming (Python)
+- Grade assignments and provide detailed feedback to 30+ students
+- Hold office hours to help students debug code
+
+Hackathon Projects
+- "StudyBuddy" - AI-powered study group matching app (1st place, TechHacks 2024)
+- "GreenRoute" - Carbon footprint tracker for commuters (Best Environmental Impact)
+
+TECHNICAL SKILLS
+Languages: Python, JavaScript, TypeScript, Java, SQL
+Frontend: React, React Native, HTML/CSS, Tailwind
+Backend: Node.js, Flask, Django, PostgreSQL, MongoDB
+Tools: Git, Docker, AWS, Firebase, Figma
+
+ACTIVITIES
+- Computer Science Club, Vice President
+- Open Source Contributor, various projects`,
+                career_goals: "I want to work as a full-stack developer at an innovative startup where I can have real impact on the product. Particularly interested in fintech or healthtech.",
+                skills_to_develop: "I want to get more experience with mobile development in a production environment, and learn more about product management and user research.",
+                learning_preferences: ["Hands-on", "Independent"]
+            },
+            project: {
+                company: "PayFlow Technologies",
+                industry: "Technology",
+                title: "Mobile Payment Feature Development",
+                narrative: `PayFlow is a growing fintech startup building the next generation of payment solutions for small businesses and their customers. We're looking for a computer science student to join our mobile team and help build a new peer-to-peer payment splitting feature.
+
+The feature will allow groups of friends to easily split bills at restaurants, shared expenses for trips, or recurring costs like rent and utilities. Think of it like a simplified Splitwise built directly into our payment app.
+
+The student will work on our React Native mobile app and will be responsible for:
+- Designing and implementing the UI for creating and managing split payments
+- Building the API integration with our backend payment processing system
+- Implementing push notifications for payment requests and confirmations
+- Writing comprehensive unit and integration tests
+- Participating in our code review process
+
+They'll work closely with our product manager to understand user needs and with our senior engineers for technical guidance. We use Agile methodology with 2-week sprints, daily standups, and regular retrospectives.
+
+By the end of the project, we expect a fully functional feature that's ready for beta testing, along with documentation and a presentation to our product team.`,
+                mentorship: "High",
+                team_size: "Small Team"
+            },
+            institution: {
+                credits: 4,
+                weeks: 16,
+                hours: 12,
+                name: "Tech Institute",
+                grading: "Competency-Based",
+                frameworks: ["AAC&U VALUE"]
+            }
+        },
+        health: {
+            learner: {
+                name: "Maria Rodriguez",
+                academic_level: "Graduate",
+                major: "Public Health (MPH)",
+                resume_text: `MARIA RODRIGUEZ, MPH Candidate
+Public Health | Community University | Expected 2025
+maria.rodriguez@email.com | (555) 345-6789
+
+EDUCATION
+Community University, Master of Public Health (MPH)
+Concentration: Community Health Education
+Expected Graduation: May 2025 | GPA: 3.8
+
+University of California, Bachelor of Science in Biology
+Graduated: May 2023 | GPA: 3.5
+
+EXPERIENCE
+
+Health Education Coordinator Intern | County Health Department | Summer 2024
+- Developed bilingual health education materials on diabetes prevention
+- Conducted community outreach in underserved neighborhoods
+- Collected and analyzed survey data from 200+ community members
+- Assisted with grant writing for CDC funding application
+
+Research Assistant | Community University School of Public Health | 2023-Present
+- Support mixed-methods research on health disparities in immigrant communities
+- Conduct qualitative interviews with community health workers
+- Perform literature reviews and data entry using REDCap
+- Co-authored abstract accepted to APHA annual conference
+
+Volunteer Health Educator | Free Clinic | 2022-2023
+- Provided health screenings and education at monthly community events
+- Created culturally appropriate educational materials in English and Spanish
+- Trained new volunteers on patient communication protocols
+
+SKILLS
+Research: Survey design, qualitative interviews, focus groups, SPSS, NVivo
+Languages: English (native), Spanish (fluent), Portuguese (conversational)
+Certifications: CHES (Certified Health Education Specialist) - In Progress
+
+RELEVANT COURSEWORK
+Epidemiology, Biostatistics, Health Behavior Theory, Program Planning & Evaluation, Health Communication`,
+                career_goals: "I want to become a community health program manager focused on reducing health disparities in underserved populations. I'm particularly passionate about youth health education.",
+                skills_to_develop: "I want to gain hands-on experience designing and implementing a health education program, from needs assessment through evaluation.",
+                learning_preferences: ["Collaborative", "Reading/Writing"]
+            },
+            project: {
+                company: "Healthy Communities Coalition",
+                industry: "Nonprofit",
+                title: "Youth Health Education Program Development",
+                narrative: `Healthy Communities Coalition is a nonprofit organization dedicated to improving health outcomes in underserved communities. We're seeking a graduate student in public health to help us design and pilot a health education curriculum for middle school students in our community.
+
+The project involves multiple phases:
+
+1. Needs Assessment: Conduct surveys and focus groups with students, parents, and teachers to understand the most pressing health education needs. We suspect topics like nutrition, mental health, and physical activity will be priorities.
+
+2. Curriculum Development: Based on the needs assessment, develop an age-appropriate, culturally relevant health education curriculum. This should include lesson plans, activities, and materials that can be delivered by our community health workers.
+
+3. Pilot Implementation: Work with one of our partner schools to pilot 4-6 sessions of the curriculum. Train our staff on delivering the content.
+
+4. Evaluation: Develop pre/post assessments to measure knowledge gains and behavior intentions. Analyze results and provide recommendations for improvement.
+
+The student will work with our Program Director and collaborate with school administrators and community health workers. This is a great opportunity to apply public health theory to real-world program development.
+
+We're looking for someone who can work independently, communicate effectively with diverse stakeholders, and is passionate about youth health.`,
+                mentorship: "Medium",
+                team_size: "Pair"
+            },
+            institution: {
+                credits: 3,
+                weeks: 12,
+                hours: 10,
+                name: "Community University",
+                grading: "Pass/Fail",
+                frameworks: ["Institution-Specific"]
+            }
+        },
+        finance: {
+            learner: {
+                name: "David Park",
+                academic_level: "Junior",
+                major: "Finance",
+                resume_text: `DAVID PARK
+Finance Major | Business School | Class of 2026
+david.park@email.com | linkedin.com/in/davidpark | (555) 456-7890
+
+EDUCATION
+Business School, Bachelor of Science in Finance
+Expected Graduation: May 2026 | GPA: 3.6
+Minor: Data Analytics
+
+Relevant Coursework: Corporate Finance, Investment Analysis, Financial Modeling, Accounting, Economics, Business Statistics, Data Visualization
+
+EXPERIENCE
+
+Investment Banking Summer Analyst | Regional Bank | Summer 2024
+- Built financial models for M&A transactions totaling $50M+
+- Conducted industry research and competitive analysis
+- Prepared pitch books and presentation materials
+- Shadowed senior bankers in client meetings
+
+Finance Club Investment Fund | Business School | 2023-Present
+- Manage $100K student-run investment portfolio
+- Conduct equity research and present stock pitches to committee
+- Performed DCF and comparable company analysis
+- Portfolio returned 12% YTD, outperforming benchmark by 3%
+
+Peer Tutor | Business School Academic Center | 2023-Present
+- Tutor students in introductory finance and accounting courses
+- Develop study materials and practice problems
+
+TECHNICAL SKILLS
+Financial Modeling: Excel (advanced), DCF, LBO, M&A models
+Software: Bloomberg Terminal, Capital IQ, FactSet
+Programming: Python (pandas, numpy), SQL, Tableau
+Certifications: Bloomberg Market Concepts
+
+ACTIVITIES
+- Finance Club, VP of Research
+- Business School Honors Society
+- Volunteer Tax Preparer (VITA program)`,
+                career_goals: "I'm pursuing a career in equity research or asset management. I'm particularly interested in ESG investing and sustainable finance.",
+                skills_to_develop: "I want to develop my skills in ESG analysis and learn how to integrate sustainability factors into traditional financial analysis.",
+                learning_preferences: ["Reading/Writing", "Independent"]
+            },
+            project: {
+                company: "Meridian Capital Advisors",
+                industry: "Finance",
+                title: "ESG Investment Research Initiative",
+                narrative: `Meridian Capital Advisors is a boutique investment advisory firm managing $500M in assets for high-net-worth individuals and family offices. We're increasingly getting questions from clients about ESG (Environmental, Social, Governance) investing, and we need help developing our capabilities in this area.
+
+We're looking for a finance student to help us with a comprehensive ESG research initiative:
+
+1. Industry Research: Research the current landscape of ESG investing, including major frameworks (SASB, GRI, TCFD), rating providers, and best practices. Summarize findings in a report for our investment committee.
+
+2. ESG Screening Model: Develop an Excel-based screening model that helps us evaluate companies based on ESG criteria. This should integrate with traditional financial metrics and be usable by our analysts.
+
+3. Portfolio Analysis: Apply the screening model to analyze our current portfolio holdings and identify any ESG risks or opportunities. Provide recommendations for portfolio adjustments.
+
+4. Client Materials: Create educational materials we can share with clients explaining our ESG approach and how it aligns with their values.
+
+5. Investment Committee Presentation: Present your findings and recommendations to our investment committee, including specific stock ideas that score well on both financial and ESG metrics.
+
+You'll work directly with our Chief Investment Officer and collaborate with our research analysts. This is an excellent opportunity to gain buy-side experience and develop expertise in the growing field of sustainable investing.`,
+                mentorship: "High",
+                team_size: "Individual"
+            },
+            institution: {
+                credits: 3,
+                weeks: 14,
+                hours: 9,
+                name: "Business School",
+                grading: "Letter Grade (A-F)",
+                frameworks: ["NACE Career Readiness", "AAC&U VALUE"]
+            }
+        }
+    };
+
+    // Current scenario for individual section samples (defaults to marketing)
+    let currentScenario = 'marketing';
+
+    // Toggle demo dropdown
+    function toggleDemoDropdown() {
+        const dropdown = document.getElementById('demoDropdown');
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('demoDropdown');
+        const btn = document.getElementById('demoBtn');
+        if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    // Load full scenario
+    function loadScenario(scenarioKey) {
+        currentScenario = scenarioKey;
+        const scenario = demoScenarios[scenarioKey];
+
+        populateLearnerSection(scenario.learner);
+        populateProjectSection(scenario.project);
+        populateInstitutionSection(scenario.institution);
+
+        // Expand all sections to show the data
+        expandAllSectionsForDemo();
+
+        // Close dropdown
+        document.getElementById('demoDropdown').classList.add('hidden');
+
+        // Show confirmation
+        showDemoToast(`Loaded "${scenarioKey}" demo scenario`);
+    }
+
+    // Load individual section sample
+    function loadSectionSample(section) {
+        const scenario = demoScenarios[currentScenario];
+
+        if (section === 'learner') {
+            populateLearnerSection(scenario.learner);
+            expandSection('learner-section');
+        } else if (section === 'project') {
+            populateProjectSection(scenario.project);
+            expandSection('project-section');
+        } else if (section === 'institution') {
+            populateInstitutionSection(scenario.institution);
+            expandSection('institution-section');
+        }
+
+        showDemoToast(`Loaded sample ${section} data`);
+    }
+
+    // Populate learner section
+    function populateLearnerSection(data) {
+        document.querySelector('[name="learner_name"]').value = data.name;
+        document.querySelector('[name="academic_level"]').value = data.academic_level;
+        document.querySelector('[name="major_or_program"]').value = data.major;
+        document.querySelector('[name="resume_text"]').value = data.resume_text;
+        document.querySelector('[name="career_goals"]').value = data.career_goals;
+        document.querySelector('[name="skills_to_develop"]').value = data.skills_to_develop;
+
+        // Handle checkboxes for learning preferences
+        document.querySelectorAll('[name="learning_preferences"]').forEach(cb => {
+            cb.checked = data.learning_preferences.includes(cb.value);
+        });
+    }
+
+    // Populate project section
+    function populateProjectSection(data) {
+        document.querySelector('[name="company_name"]').value = data.company;
+        document.querySelector('[name="industry"]').value = data.industry;
+        document.querySelector('[name="project_title"]').value = data.title;
+        document.querySelector('[name="project_narrative"]').value = data.narrative;
+        document.querySelector('[name="mentorship_level"]').value = data.mentorship;
+        document.querySelector('[name="team_size"]').value = data.team_size;
+    }
+
+    // Populate institution section
+    function populateInstitutionSection(data) {
+        document.querySelector('[name="credit_hours"]').value = data.credits;
+        document.querySelector('[name="term_length_weeks"]').value = data.weeks;
+        document.querySelector('[name="hours_per_week"]').value = data.hours;
+        document.querySelector('[name="institution_name"]').value = data.name;
+        document.querySelector('[name="grading_scale"]').value = data.grading;
+
+        // Handle checkboxes for competency frameworks
+        document.querySelectorAll('[name="competency_framework"]').forEach(cb => {
+            cb.checked = data.frameworks.includes(cb.value);
+        });
+    }
+
+    // Expand a specific section
+    function expandSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        const toggle = document.querySelector(`[data-target="${sectionId}"]`);
+        const arrow = toggle.querySelector('.section-arrow');
+
+        section.classList.remove('hidden');
+        arrow.classList.add('rotate-180');
+    }
+
+    // Expand all sections for demo
+    function expandAllSectionsForDemo() {
+        document.querySelectorAll('.section-content').forEach(section => {
+            section.classList.remove('hidden');
+        });
+        document.querySelectorAll('.section-arrow').forEach(arrow => {
+            arrow.classList.add('rotate-180');
+        });
+        allExpanded = true;
+        document.getElementById('expandAllText').textContent = 'Collapse All Sections';
+    }
+
+    // Show toast notification
+    function showDemoToast(message) {
+        // Create toast if doesn't exist
+        let toast = document.getElementById('demo-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'demo-toast';
+            toast.className = 'fixed bottom-8 left-1/2 transform -translate-x-1/2 px-6 py-3 bg-green-600 text-white rounded-lg shadow-lg transition-opacity duration-300 z-50';
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = '✓ ' + message;
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+
+        setTimeout(() => {
+            toast.classList.remove('opacity-100');
+            toast.classList.add('opacity-0');
+        }, 2000);
+    }
+
     // Track expand state
     let allExpanded = false;
 
