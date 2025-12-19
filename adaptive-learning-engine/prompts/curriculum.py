@@ -118,7 +118,37 @@ Generate a complete course shell including ALL of the following sections:
 
 ---
 
-### 2. LEARNING OBJECTIVES
+### 2. GRADING BREAKDOWN
+
+Generate based on grading scale: {institution.get('grading_scale', 'Letter Grade (A-F)')}
+
+**For Letter Grade:**
+```
+Project Deliverable(s): 40%
+Weekly Reflections: 25%
+Professional Skills Assessment: 20%
+Final Self-Assessment & Synthesis: 10%
+Employer Evaluation: 5%
+```
+
+**For Pass/Fail:**
+```
+To pass, students must:
+- Complete all project deliverables to at least "Proficient" level
+- Submit all weekly reflections meeting "Proficient" criteria
+- Receive satisfactory employer evaluation
+- Complete final self-assessment
+```
+
+**For Competency-Based:**
+```
+Students must demonstrate proficiency in all learning objectives:
+- [List each objective with mastery criteria]
+```
+
+---
+
+### 3. LEARNING OBJECTIVES
 
 #### Fixed Objectives (Transferable Professional Skills)
 Generate objectives covering ONLY the selected areas (user has chosen these):
@@ -147,7 +177,7 @@ Bloom's Levels and Example Verbs:
 
 ---
 
-### 3. WEEKLY SCHEDULE
+### 4. WEEKLY SCHEDULE
 
 Generate a week-by-week structure for ALL {institution.get('term_length_weeks', '14')} weeks.
 
@@ -185,7 +215,7 @@ IMPORTANT: Use ### (H3) for week headers and #### (H4) for subsections. Do NOT u
 
 ---
 
-### 4. REFLECTION PROMPTS (DEAL Model)
+### 5. REFLECTION PROMPTS (DEAL Model)
 
 For EACH week's Reflective Observation section, generate a specific reflection prompt following the DEAL framework:
 
@@ -205,9 +235,9 @@ IMPORTANT: Reflection prompts must be SPECIFIC to each week's activities, not ge
 
 ---
 
-### 5. ASSESSMENT PACKAGE
+### 6. ASSESSMENT PACKAGE
 
-#### 5a. Deliverable Rubric
+#### 6a. Deliverable Rubric
 Generate a detailed rubric for the primary project deliverables.
 
 Format as a table with criteria:
@@ -219,21 +249,21 @@ Include criteria for:
 - Professional presentation
 - Evidence of iteration based on feedback
 
-#### 5b. Professional Skills Rubric
+#### 6b. Professional Skills Rubric
 Generate a rubric for transferable skills:
 
 | Skill Area | Excellent (4) | Proficient (3) | Developing (2) | Beginning (1) |
 
 Include: Communication, Time Management, Collaboration, Problem-Solving, Professionalism
 
-#### 5c. Reflection Quality Rubric
+#### 6c. Reflection Quality Rubric
 Generate a rubric based on DEAL model:
 
 | Dimension | Excellent (4) | Proficient (3) | Developing (2) | Beginning (1) |
 
 Include: Description (accuracy, detail), Examination (depth of analysis), Articulated Learning (specificity, application)
 
-#### 5d. Employer Evaluation Form
+#### 6d. Employer Evaluation Form
 Generate a structured form for the employer mentor:
 
 ```
@@ -272,7 +302,7 @@ What is one area for growth?
 Additional comments:
 ```
 
-#### 5e. Student Self-Assessment
+#### 6e. Student Self-Assessment
 Generate a self-assessment aligned to learning objectives:
 
 ```
@@ -289,36 +319,6 @@ Reflection Questions:
 2. Which objective remains an area for development? What would help you improve?
 3. How has this experience influenced your career goals or interests?
 4. What would you do differently if you were starting this project again?
-```
-
----
-
-### 6. GRADING BREAKDOWN
-
-Generate based on grading scale: {institution.get('grading_scale', 'Letter Grade (A-F)')}
-
-**For Letter Grade:**
-```
-Project Deliverable(s): 40%
-Weekly Reflections: 25%
-Professional Skills Assessment: 20%
-Final Self-Assessment & Synthesis: 10%
-Employer Evaluation: 5%
-```
-
-**For Pass/Fail:**
-```
-To pass, students must:
-- Complete all project deliverables to at least "Proficient" level
-- Submit all weekly reflections meeting "Proficient" criteria
-- Receive satisfactory employer evaluation
-- Complete final self-assessment
-```
-
-**For Competency-Based:**
-```
-Students must demonstrate proficiency in all learning objectives:
-- [List each objective with mastery criteria]
 ```
 
 ---
