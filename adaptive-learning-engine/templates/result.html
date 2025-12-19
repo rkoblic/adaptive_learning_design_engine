@@ -536,18 +536,50 @@
         background: #94a3b8;
     }
 
-    /* Prose styling for curriculum content */
+    /* ========================================
+       MODAL CONTENT - PROSE STYLING
+       Enhanced typography and spacing for readability
+       ======================================== */
+
+    /* Base modal content area */
+    #modal-content {
+        @apply text-gray-700 leading-relaxed;
+        font-size: 1rem;
+        line-height: 1.75;
+    }
+
+    /* Header Hierarchy - Clear visual distinction */
     .prose h1 {
-        @apply text-3xl font-bold text-gray-900 border-b border-gray-200 pb-4 mb-6;
+        @apply text-3xl font-bold text-gray-900 pb-4 mb-6;
+        border-bottom: 3px solid #e5e7eb;
     }
+
     .prose h2 {
-        @apply text-2xl font-bold text-gray-800 mt-8 mb-4;
+        @apply text-2xl font-bold text-gray-900 mt-10 mb-5 pb-3;
+        border-bottom: 2px solid #e5e7eb;
     }
+
     .prose h3 {
-        @apply text-xl font-semibold text-gray-700 mt-6 mb-3;
+        @apply text-xl font-semibold text-gray-800 mt-8 mb-4;
+        padding-left: 0.75rem;
+        border-left: 4px solid #6366f1;
     }
+
     .prose h4 {
-        @apply text-lg font-medium text-gray-700 mt-4 mb-2;
+        @apply text-lg font-semibold text-gray-700 mt-6 mb-3;
+        letter-spacing: 0.025em;
+    }
+
+    .prose h5 {
+        @apply text-base font-semibold text-gray-600 mt-5 mb-2 uppercase tracking-wide;
+    }
+
+    /* First heading in modal shouldn't have top margin */
+    #modal-content > h1:first-child,
+    #modal-content > h2:first-child,
+    #modal-content > h3:first-child,
+    #modal-content > h4:first-child {
+        @apply mt-0;
     }
 
     /* Learning Objectives subheader styling */
@@ -643,35 +675,256 @@
     .week-content li {
         @apply text-gray-700 leading-relaxed;
     }
+    /* Paragraphs - Comfortable reading spacing */
     .prose p {
-        @apply text-gray-600 leading-relaxed mb-4;
+        @apply text-gray-600 mb-5;
+        line-height: 1.8;
     }
-    .prose ul, .prose ol {
-        @apply my-4 pl-6;
+
+    /* Adjacent paragraphs get less margin */
+    .prose p + p {
+        @apply mt-0;
     }
-    .prose li {
-        @apply text-gray-600 mb-2;
+
+    /* Paragraph after heading gets reduced top spacing */
+    .prose h3 + p,
+    .prose h4 + p {
+        @apply mt-2;
     }
+
+    /* ========================================
+       LIST STYLING - Enhanced bullets and spacing
+       ======================================== */
+
+    .prose ul {
+        @apply my-5 pl-0 space-y-3;
+        list-style: none;
+    }
+
+    .prose ol {
+        @apply my-5 pl-0 space-y-3;
+        list-style: none;
+        counter-reset: list-counter;
+    }
+
+    /* Unordered list items with custom bullets */
+    .prose ul > li {
+        @apply text-gray-600 pl-7 relative;
+        line-height: 1.7;
+    }
+
+    .prose ul > li::before {
+        content: '';
+        @apply absolute left-0 top-2.5 w-2 h-2 rounded-full bg-indigo-500;
+    }
+
+    /* Ordered list items with custom numbers */
+    .prose ol > li {
+        @apply text-gray-600 pl-8 relative;
+        line-height: 1.7;
+        counter-increment: list-counter;
+    }
+
+    .prose ol > li::before {
+        content: counter(list-counter) ".";
+        @apply absolute left-0 top-0 font-semibold text-indigo-600;
+    }
+
+    /* Nested lists */
+    .prose ul ul,
+    .prose ol ul {
+        @apply mt-3 mb-0 pl-4;
+    }
+
+    .prose ul ul > li::before {
+        @apply w-1.5 h-1.5 bg-gray-400;
+    }
+
+    .prose ol ol,
+    .prose ul ol {
+        @apply mt-3 mb-0 pl-4;
+        counter-reset: nested-counter;
+    }
+
+    .prose ol ol > li::before,
+    .prose ul ol > li::before {
+        counter-increment: nested-counter;
+        content: counter(nested-counter, lower-alpha) ".";
+        @apply text-gray-500 font-medium;
+    }
+
+    /* ========================================
+       TABLE STYLING - Clean and readable
+       ======================================== */
+
     .prose table {
-        @apply w-full border-collapse border border-gray-300 my-6;
+        @apply w-full my-8 text-sm;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
+
+    .prose thead {
+        @apply bg-gradient-to-r from-gray-100 to-gray-50;
+    }
+
     .prose th {
-        @apply bg-gray-100 border border-gray-300 px-4 py-2 text-left font-semibold text-gray-700;
+        @apply px-5 py-4 text-left font-semibold text-gray-700 border-b-2 border-gray-200;
     }
+
     .prose td {
-        @apply border border-gray-300 px-4 py-2 text-gray-600;
+        @apply px-5 py-4 text-gray-600 border-b border-gray-100;
     }
-    .prose code {
-        @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+
+    .prose tbody tr:last-child td {
+        @apply border-b-0;
     }
-    .prose pre {
-        @apply bg-gray-100 p-4 rounded-lg overflow-x-auto my-4;
+
+    .prose tbody tr:hover {
+        @apply bg-gray-50;
     }
+
+    /* ========================================
+       OTHER ELEMENTS - Blockquotes, code, etc.
+       ======================================== */
+
     .prose blockquote {
-        @apply border-l-4 border-indigo-500 pl-4 my-4 italic text-gray-600;
+        @apply my-6 py-4 px-6 bg-indigo-50 rounded-r-lg italic text-gray-700;
+        border-left: 4px solid #6366f1;
     }
+
+    .prose blockquote p {
+        @apply mb-0;
+    }
+
+    .prose code {
+        @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono text-indigo-700;
+    }
+
+    .prose pre {
+        @apply bg-gray-900 text-gray-100 p-5 rounded-lg overflow-x-auto my-6;
+    }
+
+    .prose pre code {
+        @apply bg-transparent p-0 text-gray-100;
+    }
+
     .prose hr {
-        @apply my-8 border-gray-200;
+        @apply my-10 border-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent;
+    }
+
+    /* Strong and emphasis */
+    .prose strong {
+        @apply font-semibold text-gray-800;
+    }
+
+    .prose em {
+        @apply italic text-gray-700;
+    }
+
+    /* Links */
+    .prose a {
+        @apply text-indigo-600 font-medium underline decoration-indigo-300 hover:decoration-indigo-600 transition-colors;
+    }
+
+    /* ========================================
+       SECTION DIVIDERS - Visual breaks between content
+       ======================================== */
+
+    /* Add subtle divider before major sections */
+    .prose h2:not(:first-child)::before,
+    .prose h3:not(:first-child)::before {
+        content: '';
+        display: block;
+        height: 1px;
+        @apply bg-gray-200 mb-8;
+        margin-left: -0.75rem;
+    }
+
+    .prose h3:not(:first-child)::before {
+        @apply mb-6;
+    }
+
+    /* ========================================
+       CONTENT CARDS - For grouped information
+       ======================================== */
+
+    .prose .info-box,
+    .prose .note,
+    .prose .tip {
+        @apply my-6 p-5 rounded-lg border;
+    }
+
+    .prose .info-box {
+        @apply bg-blue-50 border-blue-200 text-blue-800;
+    }
+
+    .prose .note {
+        @apply bg-amber-50 border-amber-200 text-amber-800;
+    }
+
+    .prose .tip {
+        @apply bg-green-50 border-green-200 text-green-800;
+    }
+
+    /* ========================================
+       SECTION-SPECIFIC STYLING
+       ======================================== */
+
+    /* Grading Breakdown - Enhanced table display */
+    #modal-content table th:first-child,
+    #modal-content table td:first-child {
+        @apply font-medium text-gray-800;
+    }
+
+    /* Assessment rubric styling */
+    #modal-content table td:last-child {
+        @apply text-right;
+    }
+
+    /* Percentage/points column styling */
+    #modal-content table td:last-child,
+    #modal-content table th:last-child {
+        min-width: 80px;
+    }
+
+    /* Course Overview - Key info highlighting */
+    .prose p strong:first-child {
+        @apply text-gray-700;
+    }
+
+    /* Learning Objectives - Objective items */
+    #modal-content .prose ul li strong {
+        @apply text-indigo-700 block mb-1;
+    }
+
+    /* Reflection Prompts - Question styling */
+    .prose ol > li > p:first-child,
+    .prose ul > li > p:first-child {
+        @apply font-medium text-gray-800 mb-2;
+    }
+
+    /* ========================================
+       MODAL BODY ENHANCEMENTS
+       ======================================== */
+
+    /* Better padding and max-width for readability */
+    #modal-body {
+        @apply bg-gray-50;
+    }
+
+    #modal-content {
+        @apply bg-white rounded-xl shadow-sm p-8 mx-auto;
+        max-width: 900px;
+    }
+
+    /* Responsive modal content padding */
+    @media (max-width: 768px) {
+        #modal-content {
+            @apply p-5;
+        }
     }
 
     /* Print styles */
