@@ -239,14 +239,14 @@
                         </div>
                     </div>
 
-                    <!-- Skill Gaps / Learning Objectives -->
+                    <!-- Skill Gaps -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             <span class="inline-flex items-center">
                                 <svg class="w-4 h-4 text-amber-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                 </svg>
-                                Learning Objectives (Bloom's Taxonomy)
+                                Skill Gaps (Development Areas)
                             </span>
                         </label>
                         <div class="space-y-2" id="skill-gaps">
@@ -256,11 +256,11 @@
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between gap-2">
                                             <span class="font-medium text-amber-800">{{ gap.project_need }}</span>
-                                            {% if gap.bloom_level %}
-                                            <span class="text-xs px-2 py-0.5 bg-amber-200 text-amber-700 rounded flex-shrink-0">{{ gap.bloom_level }}</span>
+                                            {% if gap.importance %}
+                                            <span class="text-xs px-2 py-0.5 {% if gap.importance == 'critical' %}bg-red-200 text-red-700{% elif gap.importance == 'important' %}bg-amber-200 text-amber-700{% else %}bg-gray-200 text-gray-600{% endif %} rounded flex-shrink-0">{{ gap.importance }}</span>
                                             {% endif %}
                                         </div>
-                                        <p class="text-amber-700 text-xs mt-1">{{ gap.learning_objective or gap.learning_opportunity }}</p>
+                                        <p class="text-amber-700 text-xs mt-1">{{ gap.description or '' }}</p>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -422,14 +422,14 @@
             const checkbox = div.querySelector('input[type="checkbox"]');
             if (checkbox && checkbox.checked) {
                 const skillName = div.querySelector('.font-medium').textContent.trim();
-                const bloomBadge = div.querySelector('.bg-amber-200');
-                const bloomLevel = bloomBadge ? bloomBadge.textContent.trim() : '';
-                const objectiveEl = div.querySelector('.text-xs.mt-1');
-                const learningObjective = objectiveEl ? objectiveEl.textContent.trim() : '';
+                const importanceBadge = div.querySelector('[class*="rounded flex-shrink-0"]');
+                const importance = importanceBadge ? importanceBadge.textContent.trim() : 'important';
+                const descEl = div.querySelector('.text-xs.mt-1');
+                const description = descEl ? descEl.textContent.trim() : '';
                 gaps.push({
                     project_need: skillName,
-                    learning_objective: learningObjective,
-                    bloom_level: bloomLevel
+                    importance: importance,
+                    description: description
                 });
             }
         });
