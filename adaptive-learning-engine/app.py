@@ -13,6 +13,7 @@ if app_dir not in sys.path:
     sys.path.insert(0, app_dir)
 
 from flask import Flask, render_template, request, session, redirect, url_for, Response, flash
+from flask_session import Session
 import json
 
 from config import Config
@@ -30,6 +31,12 @@ app = Flask(__name__,
             static_folder=os.path.join(app_dir, 'static'))
 app.config.from_object(Config)
 app.config['MAX_CONTENT_LENGTH'] = Config.MAX_CONTENT_LENGTH
+
+# Configure server-side sessions (filesystem-based)
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = os.path.join(app_dir, 'flask_session')
+app.config['SESSION_PERMANENT'] = False
+Session(app)
 
 # Initialize Claude client
 claude_client = None
@@ -250,9 +257,8 @@ def generate_curriculum():
         client = get_claude_client()
         curriculum_markdown = client.generate_curriculum(confirmed_data)
 
-        # Store for download and display
+        # Store only markdown in session (HTML is too large for cookie session)
         session['curriculum'] = curriculum_markdown
-        session['curriculum_html'] = markdown_to_html(curriculum_markdown)
         session['confirmed_data'] = confirmed_data
 
         # Redirect to GET route (POST-Redirect-GET pattern)
@@ -266,13 +272,15 @@ def generate_curriculum():
 @app.route('/result', methods=['GET'])
 def show_result():
     """Step 3: Display generated curriculum (GET route for refresh support)."""
-    curriculum_html = session.get('curriculum_html')
     curriculum_markdown = session.get('curriculum')
     confirmed_data = session.get('confirmed_data')
 
-    if not curriculum_html or not curriculum_markdown:
+    if not curriculum_markdown:
         flash('No curriculum found. Please generate one first.', 'error')
         return redirect(url_for('intake_form'))
+
+    # Convert markdown to HTML for display
+    curriculum_html = markdown_to_html(curriculum_markdown)
 
     return render_template('result.html',
         curriculum_html=curriculum_html,

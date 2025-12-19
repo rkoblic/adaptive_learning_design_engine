@@ -44,3 +44,4 @@ instance/
 
 # Uploads
 uploads/
+flask_session/
