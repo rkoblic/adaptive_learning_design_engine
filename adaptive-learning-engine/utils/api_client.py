@@ -184,6 +184,11 @@ class ClaudeClient:
         try:
             return json.loads(json_str)
         except json.JSONDecodeError as e:
+            # Log error details for debugging
+            print(f"Gap analysis JSON parse error: {e}")
+            print(f"Raw response length: {len(response_text)}")
+            print(f"Extracted JSON length: {len(json_str)}")
+            print(f"First 500 chars: {json_str[:500] if json_str else 'empty'}")
             # Return a default structure if parsing fails
             return {
                 "strong_matches": [],
@@ -191,7 +196,7 @@ class ClaudeClient:
                 "skill_gaps": [],
                 "fit_assessment": {
                     "overall_fit": "good",
-                    "rationale": "Unable to complete gap analysis",
+                    "rationale": f"Gap analysis parsing failed. This may be a temporary issue - please try again.",
                     "scaffolding_recommendation": "moderate",
                     "key_development_areas": []
                 },

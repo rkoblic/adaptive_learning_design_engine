@@ -22,7 +22,7 @@ class Config:
 
     # Token limits
     EXTRACTION_MAX_TOKENS = 2000
-    GAP_ANALYSIS_MAX_TOKENS = 1500
+    GAP_ANALYSIS_MAX_TOKENS = 3000  # Increased for Bloom's taxonomy learning objectives
     CURRICULUM_MAX_TOKENS = 8000
 
     # File upload settings
