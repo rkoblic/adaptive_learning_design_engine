@@ -351,16 +351,12 @@ def api_objectives_generate():
 def outline_page():
     """Step 4: Display course outline generation page."""
     confirmed_data = session.get('confirmed_data')
-    objectives = session.get('objectives')
 
     if not confirmed_data:
         flash('Please complete the confirmation step first.', 'error')
         return redirect(url_for('intake_form'))
 
-    if not objectives:
-        flash('Please complete the objectives step first.', 'error')
-        return redirect(url_for('objectives_page'))
-
+    # Process POST data FIRST (before checking if objectives exist)
     if request.method == 'POST':
         # Save objectives data from form if provided
         objectives_data = request.form.get('objectives_data')
@@ -371,9 +367,15 @@ def outline_page():
             session['assessment_strategy'] = safe_json_loads(assessment_data, session.get('assessment_strategy', {}))
         session.modified = True
 
+    # Now check if objectives exist (after POST data has been processed)
+    objectives = session.get('objectives')
+    if not objectives:
+        flash('Please complete the objectives step first.', 'error')
+        return redirect(url_for('objectives_page'))
+
     return render_template('outline.html',
         data=confirmed_data,
-        objectives=session.get('objectives'),
+        objectives=objectives,
         outline=session.get('outline')
     )
 
