@@ -5,24 +5,8 @@
 {% block content %}
 <div class="max-w-4xl mx-auto">
     <!-- Progress Indicator -->
-    <div class="mb-8">
-        <div class="flex items-center justify-center space-x-4">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">1</div>
-                <span class="ml-2 font-medium text-primary">Input Details</span>
-            </div>
-            <div class="w-16 h-1 bg-gray-200"></div>
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold">2</div>
-                <span class="ml-2 text-gray-500">Review & Confirm</span>
-            </div>
-            <div class="w-16 h-1 bg-gray-200"></div>
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-bold">3</div>
-                <span class="ml-2 text-gray-500">Generated Course</span>
-            </div>
-        </div>
-    </div>
+    {% set step = 1 %}
+    {% include "partials/progress.html" %}
 
     <form action="{{ url_for('extract_and_confirm') }}" method="POST" enctype="multipart/form-data" id="intakeForm">
         <!-- Demo Scenarios & Expand/Collapse -->

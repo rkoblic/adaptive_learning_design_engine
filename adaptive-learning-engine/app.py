@@ -246,19 +246,15 @@ def generate_curriculum():
             }
         }
 
-        # Store confirmed data and initialize build state
+        # Store confirmed data
         session['confirmed_data'] = confirmed_data
-        session['build_state'] = {
-            'current_step': 1,
-            'objectives': None,
-            'assessment_strategy': None,
-            'outline': None,
-            'week_details': {}
-        }
+        session['objectives'] = None
+        session['assessment_strategy'] = None
+        session['outline'] = None
         session.modified = True
 
-        # Redirect to incremental builder
-        return redirect(url_for('build_curriculum_page'))
+        # Redirect to objectives page
+        return redirect(url_for('objectives_page'))
 
     except Exception as e:
         flash(f'Error processing data: {str(e)}', 'error')
@@ -303,35 +299,26 @@ def back_to_confirm():
     )
 
 
-# --- Incremental Course Builder Routes ---
+# --- Step 3: Objectives Page Routes ---
 
-@app.route('/build', methods=['GET'])
-def build_curriculum_page():
-    """Display the incremental course builder page."""
+@app.route('/objectives', methods=['GET'])
+def objectives_page():
+    """Step 3: Display objectives generation page."""
     confirmed_data = session.get('confirmed_data')
     if not confirmed_data:
         flash('Please complete the confirmation step first.', 'error')
         return redirect(url_for('intake_form'))
 
-    # Initialize build state if not present
-    if 'build_state' not in session:
-        session['build_state'] = {
-            'current_step': 1,
-            'objectives': None,
-            'assessment_strategy': None,
-            'outline': None,
-            'week_details': {}
-        }
-
-    return render_template('build.html',
+    return render_template('objectives.html',
         data=confirmed_data,
-        build_state=session.get('build_state', {})
+        objectives=session.get('objectives'),
+        assessment_strategy=session.get('assessment_strategy')
     )
 
 
-@app.route('/api/generate-objectives', methods=['POST'])
-def api_generate_objectives():
-    """Step 1 API: Generate learning objectives and assessment strategy."""
+@app.route('/api/objectives/generate', methods=['POST'])
+def api_objectives_generate():
+    """API: Generate learning objectives and assessment strategy."""
     try:
         confirmed_data = session.get('confirmed_data')
         if not confirmed_data:
@@ -340,33 +327,63 @@ def api_generate_objectives():
         client = get_claude_client()
         result = client.generate_objectives_and_assessment(confirmed_data)
 
-        # Store in build state
-        if 'build_state' not in session:
-            session['build_state'] = {}
-        session['build_state']['objectives'] = {
+        # Store in session
+        session['objectives'] = {
             'fixed_objectives': result.get('fixed_objectives', []),
             'variable_objectives': result.get('variable_objectives', [])
         }
-        session['build_state']['assessment_strategy'] = result.get('assessment_strategy', {})
+        session['assessment_strategy'] = result.get('assessment_strategy', {})
         session.modified = True
 
         return json.dumps({
             'status': 'success',
-            'objectives': session['build_state']['objectives'],
-            'assessment_strategy': session['build_state']['assessment_strategy']
+            'objectives': session['objectives'],
+            'assessment_strategy': session['assessment_strategy']
         })
 
     except Exception as e:
         return json.dumps({'error': str(e)}), 500
 
 
-@app.route('/api/generate-outline', methods=['POST'])
-def api_generate_outline():
-    """Step 2 API: Generate course outline."""
+# --- Step 4: Outline Page Routes ---
+
+@app.route('/outline', methods=['GET', 'POST'])
+def outline_page():
+    """Step 4: Display course outline generation page."""
+    confirmed_data = session.get('confirmed_data')
+    objectives = session.get('objectives')
+
+    if not confirmed_data:
+        flash('Please complete the confirmation step first.', 'error')
+        return redirect(url_for('intake_form'))
+
+    if not objectives:
+        flash('Please complete the objectives step first.', 'error')
+        return redirect(url_for('objectives_page'))
+
+    if request.method == 'POST':
+        # Save objectives data from form if provided
+        objectives_data = request.form.get('objectives_data')
+        assessment_data = request.form.get('assessment_data')
+        if objectives_data:
+            session['objectives'] = safe_json_loads(objectives_data, session.get('objectives', {}))
+        if assessment_data:
+            session['assessment_strategy'] = safe_json_loads(assessment_data, session.get('assessment_strategy', {}))
+        session.modified = True
+
+    return render_template('outline.html',
+        data=confirmed_data,
+        objectives=session.get('objectives'),
+        outline=session.get('outline')
+    )
+
+
+@app.route('/api/outline/generate', methods=['POST'])
+def api_outline_generate():
+    """API: Generate course outline."""
     try:
         confirmed_data = session.get('confirmed_data')
-        build_state = session.get('build_state', {})
-        objectives = build_state.get('objectives')
+        objectives = session.get('objectives')
 
         if not confirmed_data:
             return json.dumps({'error': 'No confirmed data in session'}), 400
@@ -376,9 +393,8 @@ def api_generate_outline():
         client = get_claude_client()
         result = client.generate_course_outline(confirmed_data, objectives)
 
-        # Store in build state
-        session['build_state']['outline'] = result
-        session['build_state']['current_step'] = 2
+        # Store in session
+        session['outline'] = result
         session.modified = True
 
         return json.dumps({
@@ -390,139 +406,27 @@ def api_generate_outline():
         return json.dumps({'error': str(e)}), 500
 
 
-@app.route('/api/generate-week/<int:week>', methods=['POST'])
-def api_generate_week(week):
-    """Step 3 API: Generate detailed content for a single week."""
-    try:
-        confirmed_data = session.get('confirmed_data')
-        build_state = session.get('build_state', {})
-        objectives = build_state.get('objectives')
-        outline = build_state.get('outline')
-
-        if not confirmed_data:
-            return json.dumps({'error': 'No confirmed data in session'}), 400
-        if not objectives:
-            return json.dumps({'error': 'Objectives not generated yet'}), 400
-        if not outline:
-            return json.dumps({'error': 'Outline not generated yet'}), 400
-
-        # Validate week number
-        term_length = int(confirmed_data.get('institution', {}).get('term_length_weeks', 14))
-        if week < 1 or week > term_length:
-            return json.dumps({'error': f'Week must be between 1 and {term_length}'}), 400
-
-        client = get_claude_client()
-        content = client.generate_week_detail(confirmed_data, objectives, outline, week)
-
-        # Store in build state
-        if 'week_details' not in session['build_state']:
-            session['build_state']['week_details'] = {}
-        session['build_state']['week_details'][str(week)] = content
-        session['build_state']['current_step'] = 3
-        session.modified = True
-
-        return json.dumps({
-            'status': 'success',
-            'week': week,
-            'content': content,
-            'html': markdown_to_html(content)
-        })
-
-    except Exception as e:
-        return json.dumps({'error': str(e)}), 500
-
-
-@app.route('/api/regenerate-week/<int:week>', methods=['POST'])
-def api_regenerate_week(week):
-    """Regenerate a specific week with optional user feedback."""
-    try:
-        confirmed_data = session.get('confirmed_data')
-        build_state = session.get('build_state', {})
-        objectives = build_state.get('objectives')
-        outline = build_state.get('outline')
-
-        if not confirmed_data:
-            return json.dumps({'error': 'No confirmed data in session'}), 400
-        if not objectives:
-            return json.dumps({'error': 'Objectives not generated yet'}), 400
-        if not outline:
-            return json.dumps({'error': 'Outline not generated yet'}), 400
-
-        # Get feedback from request
-        data = request.get_json() or {}
-        feedback = data.get('feedback', '')
-
-        # Validate week number
-        term_length = int(confirmed_data.get('institution', {}).get('term_length_weeks', 14))
-        if week < 1 or week > term_length:
-            return json.dumps({'error': f'Week must be between 1 and {term_length}'}), 400
-
-        client = get_claude_client()
-        content = client.regenerate_week(confirmed_data, objectives, outline, week, feedback)
-
-        # Update in build state
-        session['build_state']['week_details'][str(week)] = content
-        session.modified = True
-
-        return json.dumps({
-            'status': 'success',
-            'week': week,
-            'content': content,
-            'html': markdown_to_html(content)
-        })
-
-    except Exception as e:
-        return json.dumps({'error': str(e)}), 500
-
-
-@app.route('/api/save-step', methods=['POST'])
-def api_save_step():
-    """Save user edits for the current step."""
-    try:
-        data = request.get_json() or {}
-        step = data.get('step')
-        content = data.get('content')
-
-        if not step:
-            return json.dumps({'error': 'Step not specified'}), 400
-
-        build_state = session.get('build_state', {})
-
-        if step == 'objectives':
-            build_state['objectives'] = content.get('objectives', {})
-            build_state['assessment_strategy'] = content.get('assessment_strategy', {})
-        elif step == 'outline':
-            build_state['outline'] = content
-        elif step.startswith('week_'):
-            week_num = step.replace('week_', '')
-            if 'week_details' not in build_state:
-                build_state['week_details'] = {}
-            build_state['week_details'][week_num] = content
-
-        session['build_state'] = build_state
-        session.modified = True
-
-        return json.dumps({'status': 'success'})
-
-    except Exception as e:
-        return json.dumps({'error': str(e)}), 500
-
+# --- Step 5: Finalize and Result ---
 
 @app.route('/finalize', methods=['POST'])
 def finalize_curriculum():
-    """Combine all generated sections into final curriculum."""
+    """Combine all generated sections into final curriculum document."""
     try:
         confirmed_data = session.get('confirmed_data')
-        build_state = session.get('build_state', {})
+        objectives = session.get('objectives', {})
+        assessment = session.get('assessment_strategy', {})
+        outline = session.get('outline', {})
 
         if not confirmed_data:
             flash('Session expired. Please start over.', 'error')
             return redirect(url_for('intake_form'))
 
-        objectives = build_state.get('objectives', {})
-        assessment = build_state.get('assessment_strategy', {})
-        outline = build_state.get('outline', {})
-        week_details = build_state.get('week_details', {})
+        # Save outline data from form if provided
+        outline_data = request.form.get('outline_data')
+        if outline_data:
+            outline = safe_json_loads(outline_data, outline)
+            session['outline'] = outline
+            session.modified = True
 
         # Build the final curriculum markdown
         curriculum_parts = []
@@ -557,20 +461,22 @@ def finalize_curriculum():
             bloom_str = f" ({bloom})" if bloom else ""
             curriculum_parts.append(f"- {text}{bloom_str}")
 
-        # Weekly schedule
+        # Weekly schedule (high-level outline only)
         curriculum_parts.append("\n## Weekly Schedule")
-        term_length = int(confirmed_data.get('institution', {}).get('term_length_weeks', 14))
-        for week_num in range(1, term_length + 1):
-            week_content = week_details.get(str(week_num), '')
-            if week_content:
-                curriculum_parts.append(f"\n{week_content}")
-            else:
-                # Fall back to outline if detailed content not generated
-                weeks = outline.get('weeks', [])
-                week_info = next((w for w in weeks if w.get('week') == week_num), {})
-                theme = week_info.get('theme', f'Week {week_num}')
-                curriculum_parts.append(f"\n### Week {week_num}: {theme}")
-                curriculum_parts.append("*(Detailed content not yet generated)*")
+        weeks = outline.get('weeks', [])
+        for week in weeks:
+            week_num = week.get('week', '?')
+            theme = week.get('theme', f'Week {week_num}')
+            milestone = week.get('milestone', '')
+            deliverables = week.get('deliverables', [])
+
+            curriculum_parts.append(f"\n### Week {week_num}: {theme}")
+            if milestone:
+                curriculum_parts.append(f"**Milestone:** {milestone}")
+            if deliverables:
+                curriculum_parts.append("**Deliverables:**")
+                for d in deliverables:
+                    curriculum_parts.append(f"- {d}")
 
         # Assessment rubrics
         curriculum_parts.append("\n## Assessment Package")
@@ -623,7 +529,7 @@ def finalize_curriculum():
 
     except Exception as e:
         flash(f'Error finalizing curriculum: {str(e)}', 'error')
-        return redirect(url_for('build_curriculum_page'))
+        return redirect(url_for('outline_page'))
 
 
 if __name__ == '__main__':

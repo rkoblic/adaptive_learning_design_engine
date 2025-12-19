@@ -1,0 +1,66 @@
+<!-- Progress Indicator - pass 'step' variable (1-5) -->
+<div class="mb-8">
+    <div class="flex items-center justify-center">
+        <!-- Step 1: Input -->
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full {% if step >= 1 %}bg-primary text-white{% else %}bg-gray-200 text-gray-500{% endif %} text-sm font-medium">
+                {% if step > 1 %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                {% else %}1{% endif %}
+            </div>
+            <span class="ml-2 text-sm {% if step >= 1 %}text-primary font-medium{% else %}text-gray-500{% endif %} hidden sm:inline">Input</span>
+        </div>
+
+        <!-- Connector -->
+        <div class="w-8 sm:w-16 h-0.5 mx-2 {% if step > 1 %}bg-primary{% else %}bg-gray-200{% endif %}"></div>
+
+        <!-- Step 2: Review -->
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full {% if step >= 2 %}bg-primary text-white{% else %}bg-gray-200 text-gray-500{% endif %} text-sm font-medium">
+                {% if step > 2 %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                {% else %}2{% endif %}
+            </div>
+            <span class="ml-2 text-sm {% if step >= 2 %}text-primary font-medium{% else %}text-gray-500{% endif %} hidden sm:inline">Review</span>
+        </div>
+
+        <!-- Connector -->
+        <div class="w-8 sm:w-16 h-0.5 mx-2 {% if step > 2 %}bg-primary{% else %}bg-gray-200{% endif %}"></div>
+
+        <!-- Step 3: Objectives -->
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full {% if step >= 3 %}bg-primary text-white{% else %}bg-gray-200 text-gray-500{% endif %} text-sm font-medium">
+                {% if step > 3 %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                {% else %}3{% endif %}
+            </div>
+            <span class="ml-2 text-sm {% if step >= 3 %}text-primary font-medium{% else %}text-gray-500{% endif %} hidden sm:inline">Objectives</span>
+        </div>
+
+        <!-- Connector -->
+        <div class="w-8 sm:w-16 h-0.5 mx-2 {% if step > 3 %}bg-primary{% else %}bg-gray-200{% endif %}"></div>
+
+        <!-- Step 4: Outline -->
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full {% if step >= 4 %}bg-primary text-white{% else %}bg-gray-200 text-gray-500{% endif %} text-sm font-medium">
+                {% if step > 4 %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                {% else %}4{% endif %}
+            </div>
+            <span class="ml-2 text-sm {% if step >= 4 %}text-primary font-medium{% else %}text-gray-500{% endif %} hidden sm:inline">Outline</span>
+        </div>
+
+        <!-- Connector -->
+        <div class="w-8 sm:w-16 h-0.5 mx-2 {% if step > 4 %}bg-primary{% else %}bg-gray-200{% endif %}"></div>
+
+        <!-- Step 5: Document -->
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full {% if step >= 5 %}bg-primary text-white{% else %}bg-gray-200 text-gray-500{% endif %} text-sm font-medium">
+                {% if step > 5 %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                {% else %}5{% endif %}
+            </div>
+            <span class="ml-2 text-sm {% if step >= 5 %}text-primary font-medium{% else %}text-gray-500{% endif %} hidden sm:inline">Document</span>
+        </div>
+    </div>
+</div>
