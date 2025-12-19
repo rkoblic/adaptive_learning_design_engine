@@ -69,7 +69,7 @@
 
         <!-- Learner Profile Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <button type="button" class="w-full px-6 py-4 flex items-center justify-between text-left section-toggle" data-target="learner-section">
+            <div class="w-full px-6 py-4 flex items-center justify-between section-header cursor-pointer" data-target="learner-section" onclick="toggleSection(this)">
                 <div class="flex items-center">
                     <div class="bg-blue-100 rounded-lg p-2 mr-3">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,13 +81,13 @@
                         <p class="text-sm text-gray-500">Student information and resume</p>
                     </div>
                 </div>
-                <div class="flex items-center">
-                    <button type="button" onclick="event.stopPropagation(); loadSectionSample('learner')" class="text-xs text-gray-400 hover:text-primary mr-3">(use sample)</button>
+                <div class="flex items-center flex-shrink-0">
+                    <span onclick="event.stopPropagation(); loadSectionSample('learner')" class="text-xs text-gray-400 hover:text-primary mr-3 cursor-pointer">(use sample)</span>
                     <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
-            </button>
+            </div>
             <div class="px-6 pb-6 section-content hidden" id="learner-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -173,7 +173,7 @@
 
         <!-- Project & Employer Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <button type="button" class="w-full px-6 py-4 flex items-center justify-between text-left section-toggle" data-target="project-section">
+            <div class="w-full px-6 py-4 flex items-center justify-between section-header cursor-pointer" data-target="project-section" onclick="toggleSection(this)">
                 <div class="flex items-center">
                     <div class="bg-green-100 rounded-lg p-2 mr-3">
                         <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,13 +185,13 @@
                         <p class="text-sm text-gray-500">Project details and company information</p>
                     </div>
                 </div>
-                <div class="flex items-center">
-                    <button type="button" onclick="event.stopPropagation(); loadSectionSample('project')" class="text-xs text-gray-400 hover:text-primary mr-3">(use sample)</button>
+                <div class="flex items-center flex-shrink-0">
+                    <span onclick="event.stopPropagation(); loadSectionSample('project')" class="text-xs text-gray-400 hover:text-primary mr-3 cursor-pointer">(use sample)</span>
                     <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
-            </button>
+            </div>
             <div class="px-6 pb-6 section-content hidden" id="project-section">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -284,7 +284,7 @@
 
         <!-- Institutional Constraints Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <button type="button" class="w-full px-6 py-4 flex items-center justify-between text-left section-toggle" data-target="institution-section">
+            <div class="w-full px-6 py-4 flex items-center justify-between section-header cursor-pointer" data-target="institution-section" onclick="toggleSection(this)">
                 <div class="flex items-center">
                     <div class="bg-purple-100 rounded-lg p-2 mr-3">
                         <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -296,13 +296,13 @@
                         <p class="text-sm text-gray-500">Course structure and grading requirements</p>
                     </div>
                 </div>
-                <div class="flex items-center">
-                    <button type="button" onclick="event.stopPropagation(); loadSectionSample('institution')" class="text-xs text-gray-400 hover:text-primary mr-3">(use sample)</button>
+                <div class="flex items-center flex-shrink-0">
+                    <span onclick="event.stopPropagation(); loadSectionSample('institution')" class="text-xs text-gray-400 hover:text-primary mr-3 cursor-pointer">(use sample)</span>
                     <svg class="w-5 h-5 text-gray-400 transform transition-transform section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
-            </button>
+            </div>
             <div class="px-6 pb-6 section-content hidden" id="institution-section">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
@@ -840,16 +840,14 @@ You'll work directly with our Chief Investment Officer and collaborate with our 
     }
 
     // Section toggle functionality
-    document.querySelectorAll('.section-toggle').forEach(button => {
-        button.addEventListener('click', () => {
-            const targetId = button.getAttribute('data-target');
-            const content = document.getElementById(targetId);
-            const arrow = button.querySelector('.section-arrow');
+    function toggleSection(header) {
+        const targetId = header.getAttribute('data-target');
+        const content = document.getElementById(targetId);
+        const arrow = header.querySelector('.section-arrow');
 
-            content.classList.toggle('hidden');
-            arrow.classList.toggle('rotate-180');
-        });
-    });
+        content.classList.toggle('hidden');
+        arrow.classList.toggle('rotate-180');
+    }
 
     // File upload handling
     const dropZone = document.getElementById('drop-zone');
