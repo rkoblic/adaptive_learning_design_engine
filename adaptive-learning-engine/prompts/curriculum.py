@@ -154,26 +154,28 @@ Generate a week-by-week structure for ALL {institution.get('term_length_weeks', 
 **Each week MUST include ALL FOUR phases of Kolb's Cycle:**
 
 ```
-## Week [N]: [Theme/Focus]
+### Week [N]: [Theme/Focus]
 
-### Concrete Experience
+#### Concrete Experience
 [Description of project work, employer interactions, or hands-on activities]
 
-### Reflective Observation
+#### Reflective Observation
 [DEAL-model reflection prompt specific to this week - see requirements below]
 
-### Abstract Conceptualization
+#### Abstract Conceptualization
 [Connection to frameworks, concepts, readings, or skill articulation activities]
 
-### Active Experimentation
+#### Active Experimentation
 [How students will apply insights or iterate on their work]
 
-### Deliverables Due
+#### Deliverables Due
 - [List any deliverables due this week]
 
-### Milestone Check-in
+#### Milestone Check-in
 [Description of any check-ins with employer or instructor]
 ```
+
+IMPORTANT: Use ### (H3) for week headers and #### (H4) for subsections. Do NOT use ## (H2) for individual weeks - that header level is reserved for main sections only.
 
 **Pacing guidance:**
 - Weeks 1-2: Onboarding, context-setting, initial planning

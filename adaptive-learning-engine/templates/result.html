@@ -282,6 +282,15 @@
                 });
             }
 
+            // Style week headers within Weekly Schedule section
+            if (section.title.toLowerCase().includes('weekly schedule')) {
+                content.querySelectorAll('h3').forEach(h3 => {
+                    if (h3.textContent.toLowerCase().startsWith('week')) {
+                        h3.classList.add('week-header');
+                    }
+                });
+            }
+
             card.appendChild(header);
             card.appendChild(content);
             sectionsContainer.appendChild(card);
@@ -416,6 +425,11 @@
     }
     .objective-variable {
         @apply bg-blue-50 text-blue-800 border-blue-500;
+    }
+
+    /* Week header styling within Weekly Schedule */
+    .week-header {
+        @apply text-lg font-semibold py-3 px-4 rounded-lg mt-6 mb-4 bg-purple-50 text-purple-800 border-l-4 border-purple-500;
     }
     .prose p {
         @apply text-gray-600 leading-relaxed mb-4;
