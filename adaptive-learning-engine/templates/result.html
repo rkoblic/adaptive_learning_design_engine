@@ -282,11 +282,28 @@
                 });
             }
 
-            // Style week headers within Weekly Schedule section
+            // Style week headers and subsections within Weekly Schedule section
             if (section.title.toLowerCase().includes('weekly schedule')) {
                 content.querySelectorAll('h3').forEach(h3 => {
                     if (h3.textContent.toLowerCase().startsWith('week')) {
                         h3.classList.add('week-header');
+                    }
+                });
+                // Style Kolb cycle phase headers
+                content.querySelectorAll('h4').forEach(h4 => {
+                    const text = h4.textContent.toLowerCase();
+                    if (text.includes('concrete experience')) {
+                        h4.classList.add('kolb-phase', 'kolb-experience');
+                    } else if (text.includes('reflective observation')) {
+                        h4.classList.add('kolb-phase', 'kolb-reflection');
+                    } else if (text.includes('abstract conceptualization')) {
+                        h4.classList.add('kolb-phase', 'kolb-conceptualization');
+                    } else if (text.includes('active experimentation')) {
+                        h4.classList.add('kolb-phase', 'kolb-experimentation');
+                    } else if (text.includes('deliverables due')) {
+                        h4.classList.add('kolb-phase', 'kolb-deliverables');
+                    } else if (text.includes('milestone')) {
+                        h4.classList.add('kolb-phase', 'kolb-milestone');
                     }
                 });
             }
@@ -429,7 +446,36 @@
 
     /* Week header styling within Weekly Schedule */
     .week-header {
-        @apply text-lg font-semibold py-3 px-4 rounded-lg mt-6 mb-4 bg-purple-50 text-purple-800 border-l-4 border-purple-500;
+        @apply text-lg font-semibold py-3 px-4 rounded-lg mt-8 mb-4 bg-purple-50 text-purple-800 border-l-4 border-purple-500;
+    }
+
+    /* Kolb cycle phase styling */
+    .kolb-phase {
+        @apply text-sm font-semibold uppercase tracking-wide py-2 px-3 rounded mt-5 mb-2 inline-block;
+    }
+    .kolb-experience {
+        @apply bg-orange-100 text-orange-700;
+    }
+    .kolb-reflection {
+        @apply bg-sky-100 text-sky-700;
+    }
+    .kolb-conceptualization {
+        @apply bg-violet-100 text-violet-700;
+    }
+    .kolb-experimentation {
+        @apply bg-emerald-100 text-emerald-700;
+    }
+    .kolb-deliverables {
+        @apply bg-rose-100 text-rose-700;
+    }
+    .kolb-milestone {
+        @apply bg-amber-100 text-amber-700;
+    }
+
+    /* Add spacing after kolb phase content */
+    .kolb-phase + p,
+    .kolb-phase + ul {
+        @apply mt-2 mb-4 pl-3 border-l-2 border-gray-200;
     }
     .prose p {
         @apply text-gray-600 leading-relaxed mb-4;
