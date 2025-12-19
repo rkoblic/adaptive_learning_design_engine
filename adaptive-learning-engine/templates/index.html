@@ -179,7 +179,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Project Description <span class="text-red-500">*</span></label>
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-3">
                         <p class="text-sm text-blue-800">
-                            <strong>Describe the project in your own words. Include:</strong>
+                            <strong>Describe the project. Include:</strong>
                         </p>
                         <ul class="text-sm text-blue-700 mt-2 space-y-1 list-disc list-inside">
                             <li>What problem or opportunity will the student address?</li>
@@ -188,10 +188,26 @@
                             <li>What does success look like?</li>
                             <li>What skills or background would be helpful?</li>
                         </ul>
-                        <p class="text-sm text-blue-700 mt-2 italic">Write 2-4 paragraphs. The more context you provide, the better we can design the learning experience.</p>
                     </div>
-                    <textarea name="project_narrative" rows="8" required minlength="100" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Describe the project here..."></textarea>
-                    <p class="text-xs text-gray-500 mt-1">Minimum 100 characters</p>
+
+                    <!-- Project Document Upload -->
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-colors mb-3" id="project-drop-zone">
+                        <input type="file" name="project_file" id="project_file" accept=".pdf,.docx" class="hidden">
+                        <svg class="mx-auto h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p class="mt-2 text-sm text-gray-600">
+                            <button type="button" class="text-green-600 font-medium hover:underline" onclick="document.getElementById('project_file').click()">Upload a project brief</button>
+                            or drag and drop
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">PDF or DOCX (job description, project brief, scope document)</p>
+                        <p class="text-sm text-gray-600 mt-2" id="project-file-name"></p>
+                    </div>
+
+                    <div class="text-center text-sm text-gray-500 mb-3">— OR type/paste below —</div>
+
+                    <textarea name="project_narrative" id="project_narrative" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Describe the project here, or upload a document above..."></textarea>
+                    <p class="text-xs text-gray-500 mt-1">Upload a file OR enter text (minimum 100 characters if typing)</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -359,6 +375,46 @@
     function updateFileName(file) {
         fileNameDisplay.textContent = `Selected: ${file.name}`;
         fileNameDisplay.classList.add('text-green-600', 'font-medium');
+    }
+
+    // Project file upload handling
+    const projectDropZone = document.getElementById('project-drop-zone');
+    const projectFileInput = document.getElementById('project_file');
+    const projectFileNameDisplay = document.getElementById('project-file-name');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        projectDropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        projectDropZone.addEventListener(eventName, () => {
+            projectDropZone.classList.add('border-green-500', 'bg-green-50');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        projectDropZone.addEventListener(eventName, () => {
+            projectDropZone.classList.remove('border-green-500', 'bg-green-50');
+        }, false);
+    });
+
+    projectDropZone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            projectFileInput.files = files;
+            updateProjectFileName(files[0]);
+        }
+    });
+
+    projectFileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            updateProjectFileName(e.target.files[0]);
+        }
+    });
+
+    function updateProjectFileName(file) {
+        projectFileNameDisplay.textContent = `Selected: ${file.name}`;
+        projectFileNameDisplay.classList.add('text-green-600', 'font-medium');
     }
 
     // Form submission with loading state

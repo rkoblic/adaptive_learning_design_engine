@@ -97,9 +97,21 @@ def extract_and_confirm():
             }
         }
 
+        # Handle project file upload or text
+        project_narrative = ''
+        if 'project_file' in request.files:
+            project_file = request.files['project_file']
+            if project_file and project_file.filename:
+                project_narrative = extract_text_from_file(project_file)
+
+        if not project_narrative:
+            project_narrative = request.form.get('project_narrative', '')
+
+        raw_inputs['project']['project_narrative'] = project_narrative
+
         # Validate required fields
-        if not raw_inputs['project']['project_narrative'].strip():
-            flash('Please provide a project narrative.', 'error')
+        if not project_narrative.strip():
+            flash('Please upload a project document or provide a project description.', 'error')
             return redirect(url_for('intake_form'))
 
         # Get Claude client and call extraction APIs
