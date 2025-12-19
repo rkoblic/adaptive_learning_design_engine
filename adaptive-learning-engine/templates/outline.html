@@ -88,6 +88,8 @@
             </div>
             <form method="POST" action="{{ url_for('finalize_curriculum') }}" id="continue-form">
                 <input type="hidden" name="outline_data" id="outline-data">
+                <input type="hidden" name="objectives_data" id="objectives-data">
+                <input type="hidden" name="assessment_data" id="assessment-data">
                 <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                     Generate Final Document &rarr;
                 </button>
@@ -101,8 +103,9 @@
 <script>
     let outlineData = null;
 
-    // Objectives data passed from server (needed for API call)
+    // Data passed from server (needed for form submission and API call)
     const objectivesData = {{ objectives | tojson }};
+    const assessmentData = {{ assessment_strategy | tojson }};
 
     // Generate outline on page load
     document.addEventListener('DOMContentLoaded', function() {
@@ -204,8 +207,10 @@
             weeksContainer.appendChild(div);
         });
 
-        // Set hidden form data
+        // Set hidden form data for finalize submission
         document.getElementById('outline-data').value = JSON.stringify(outlineData);
+        document.getElementById('objectives-data').value = JSON.stringify(objectivesData);
+        document.getElementById('assessment-data').value = JSON.stringify(assessmentData);
     }
 </script>
 {% endblock %}

@@ -376,6 +376,7 @@ def outline_page():
     return render_template('outline.html',
         data=confirmed_data,
         objectives=objectives,
+        assessment_strategy=session.get('assessment_strategy', {}),
         outline=session.get('outline')
     )
 
@@ -424,20 +425,19 @@ def finalize_curriculum():
     """Combine all generated sections into final curriculum document."""
     try:
         confirmed_data = session.get('confirmed_data')
-        objectives = session.get('objectives', {})
-        assessment = session.get('assessment_strategy', {})
-        outline = session.get('outline', {})
 
         if not confirmed_data:
             flash('Session expired. Please start over.', 'error')
             return redirect(url_for('intake_form'))
 
-        # Save outline data from form if provided
+        # Get data from form first (serverless compatible), fallback to session
         outline_data = request.form.get('outline_data')
-        if outline_data:
-            outline = safe_json_loads(outline_data, outline)
-            session['outline'] = outline
-            session.modified = True
+        objectives_data = request.form.get('objectives_data')
+        assessment_data = request.form.get('assessment_data')
+
+        outline = safe_json_loads(outline_data, {}) if outline_data else session.get('outline', {})
+        objectives = safe_json_loads(objectives_data, {}) if objectives_data else session.get('objectives', {})
+        assessment = safe_json_loads(assessment_data, {}) if assessment_data else session.get('assessment_strategy', {})
 
         # Build the final curriculum markdown
         curriculum_parts = []
