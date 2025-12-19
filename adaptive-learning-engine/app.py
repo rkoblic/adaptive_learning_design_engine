@@ -16,7 +16,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, R
 import json
 
 from config import Config
-from utils import extract_text_from_file, ClaudeClient, markdown_to_html, prepare_download
+from utils import extract_text_from_file, ClaudeClient, markdown_to_html, prepare_download, markdown_to_docx
 from prompts import (
     build_resume_extraction_prompt,
     build_project_extraction_prompt,
@@ -275,6 +275,29 @@ def download_curriculum():
     return Response(
         curriculum,
         mimetype='text/markdown',
+        headers={'Content-Disposition': f'attachment;filename={filename}'}
+    )
+
+
+@app.route('/download/word', methods=['GET'])
+def download_word():
+    """Download generated curriculum as Word document."""
+    curriculum = session.get('curriculum', '')
+    if not curriculum:
+        flash('No curriculum to download. Please generate one first.', 'error')
+        return redirect(url_for('intake_form'))
+
+    data = session.get('confirmed_data', {})
+    base_filename = prepare_download(data)
+    # Change extension from .md to .docx
+    filename = base_filename.replace('.md', '.docx')
+
+    # Convert markdown to Word document
+    docx_buffer = markdown_to_docx(curriculum)
+
+    return Response(
+        docx_buffer.getvalue(),
+        mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         headers={'Content-Disposition': f'attachment;filename={filename}'}
     )
 

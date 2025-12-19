@@ -2,6 +2,10 @@
 
 import markdown
 import re
+import io
+from docx import Document
+from docx.shared import Inches, Pt
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 
 def markdown_to_html(md_content: str) -> str:
@@ -104,3 +108,94 @@ def extract_toc_from_curriculum(md_content: str) -> list:
             })
 
     return toc
+
+
+def markdown_to_docx(md_content: str) -> io.BytesIO:
+    """
+    Convert markdown content to a Word document.
+
+    Args:
+        md_content: Markdown string
+
+    Returns:
+        BytesIO buffer containing the Word document
+    """
+    doc = Document()
+
+    # Process markdown line by line
+    lines = md_content.split('\n')
+    current_list = None
+
+    for line in lines:
+        line = line.rstrip()
+
+        # Skip empty lines
+        if not line:
+            current_list = None
+            continue
+
+        # Handle headers
+        if line.startswith('# '):
+            p = doc.add_heading(line[2:], level=1)
+            current_list = None
+        elif line.startswith('## '):
+            p = doc.add_heading(line[3:], level=2)
+            current_list = None
+        elif line.startswith('### '):
+            p = doc.add_heading(line[4:], level=3)
+            current_list = None
+        # Handle list items
+        elif line.startswith('- '):
+            text = line[2:]
+            # Handle bold text in list items
+            text = process_inline_formatting(text)
+            p = doc.add_paragraph(text, style='List Bullet')
+        elif line.startswith('* '):
+            text = line[2:]
+            text = process_inline_formatting(text)
+            p = doc.add_paragraph(text, style='List Bullet')
+        elif re.match(r'^\d+\.\s', line):
+            text = re.sub(r'^\d+\.\s', '', line)
+            text = process_inline_formatting(text)
+            p = doc.add_paragraph(text, style='List Number')
+        # Handle bold lines (like **Credits:** 3)
+        elif line.startswith('**') and ':**' in line:
+            p = doc.add_paragraph()
+            # Extract the bold part and the value
+            match = re.match(r'\*\*(.+?):\*\*\s*(.*)', line)
+            if match:
+                run = p.add_run(match.group(1) + ': ')
+                run.bold = True
+                p.add_run(match.group(2))
+            else:
+                p.add_run(process_inline_formatting(line))
+        # Regular paragraph
+        else:
+            text = process_inline_formatting(line)
+            p = doc.add_paragraph(text)
+
+    # Save to BytesIO buffer
+    buffer = io.BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+
+    return buffer
+
+
+def process_inline_formatting(text: str) -> str:
+    """
+    Process inline markdown formatting (bold, italic) for plain text output.
+    Note: For docx, we just strip the markers since python-docx handles runs differently.
+
+    Args:
+        text: Text with markdown formatting
+
+    Returns:
+        Clean text without markdown markers
+    """
+    # Remove bold markers
+    text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)
+    # Remove italic markers
+    text = re.sub(r'\*(.+?)\*', r'\1', text)
+    text = re.sub(r'_(.+?)_', r'\1', text)
+    return text
